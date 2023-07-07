@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "276224518042",
+    "project_id": "darl-dispatch",
+    "storage_bucket": "darl-dispatch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276224518042:android:9da46b3b784da100737c23",
+        "android_client_info": {
+          "package_name": "com.darlproject.darl_dispatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276224518042-rkcpovvlrrh43i107pa033vjainpd27h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXMX3hxWhY1JwMDBOla5MTcI-hao58lVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276224518042-rkcpovvlrrh43i107pa033vjainpd27h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276224518042-7439gnb720dn8nljg8tnglrh2nchv9gn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.darlproject.darlDispatch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

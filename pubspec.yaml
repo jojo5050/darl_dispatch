@@ -1,0 +1,137 @@
+name: darl_dispatch
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  flutter_spinkit: ^5.1.0
+  dio: ^4.0.6
+  firebase_auth: ^4.6.1
+  firebase_core: ^2.14.0
+  cloud_firestore: ^4.8.1
+  firebase_storage: ^11.2.3
+  firebase_messaging: ^14.6.3
+  shared_preferences: ^2.1.2
+  hive: ^2.2.3
+  path_provider: ^2.0.15
+  responsive_sizer: ^3.1.1
+  animated_text_kit: ^4.2.2
+  localstorage: ^4.0.1+2
+  sembast: ^3.4.7
+  provider: ^6.0.5
+  google_maps_flutter: ^2.3.0
+  circle_bottom_navigation_bar: ^1.0.0
+  get_it: ^7.6.0
+  mvc_pattern: ^8.12.0
+  pretty_dio_logger: ^1.1.1
+  toast: ^0.3.0
+  gallery_saver: ^2.3.2
+  intl_phone_number_input: ^0.7.3+1
+  country_state_city_picker: ^1.2.8
+  calendar_date_picker2: ^0.5.2
+  localization: ^2.1.0
+  timeago: ^3.3.0
+  intl: ^0.17.0
+  flutter_switch: ^0.3.2
+  getwidget: ^3.1.1
+  image_picker: ^0.8.9
+  fluttertoast: ^8.2.2
+  photo_view: ^0.14.0
+  image_cropper: ^1.4.1
+  location: ^4.4.0
+  flutter_polyline_points: ^1.0.0
+  connectivity: ^3.0.6
+  flutter_svg: ^1.1.0
+  clipboard: ^0.1.3
+  http: ^0.13.1
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - assets/images/darllogo.png
+    - assets/images/bgb.png
+    - assets/images/onboardbg.png
+    - assets/images/generalDashBoardBg.png
+    - assets/images/backarrowicon.svg
+    - assets/images/pickupdashbg.png
+    - assets/images/carIcon.svg
+    - assets/images/payIcon.svg
+    - assets/images/rectCheckIcon.svg
+    - assets/images/roundcheckIcon.svg
+    - assets/images/registercarIcon.svg
+    - assets/images/personPlus.svg
+    - assets/images/personCheck.svg
+    - assets/images/openInfo.svg
+    - assets/images/messageIcon.svg
+    - assets/images/expenditureIcon.svg
+    - assets/images/moneyStraightIcon.svg
+    - assets/images/moneyWaveIcon.svg
+    - assets/images/payOutDollarIcon.svg
+    - assets/images/personEditIcon.svg
+    - assets/images/shippersIcon.svg
+    - assets/images/personShield.svg
+    - assets/images/custombg.png
+    - assets/images/img_not_available.jpeg
+    - assets/images/dartvlogo.png
+    - assets/images/dartv.png
+    - assets/images/badgeImage.png
+    - assets/images/destinationImage.png
+    - assets/images/sourceImage.png
+    - assets/images/weight.png
+    - assets/images/custumBg.png
+    - assets/images/profileavater.png
+
+  fonts:
+    - family: Interfont
+      fonts:
+        - asset: fonts/interfont.ttf
+
+    - family: Customfont
+      fonts:
+        - asset: fonts/customfont.ttf
+
+    - family: Lobster
+      fonts:
+        - asset: fonts/lobster.ttf
