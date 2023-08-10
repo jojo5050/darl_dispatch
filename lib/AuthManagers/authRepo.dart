@@ -222,6 +222,15 @@ class AuthRepo with ApiServices{
 
     return null;
   }
+  Future<Response?> registerNewVehicle(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/vehicle_registration.php", credentials );
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
 
   Future<Response?> fetchSingleLoad(Map<String, String> credentials) async {
     Response? response = await apiPostRequests("admin/load_details.php", credentials);
@@ -325,7 +334,7 @@ class AuthRepo with ApiServices{
   }
 
   Future<Response?> pickLoad(Map<String, String> credentials) async {
-    Response? response = await apiPostRequests("admin/pickLoad.php", credentials);
+    Response? response = await apiPostRequests("drivers/pickLoad.php", credentials);
 
     if (response != null) {
       return response;
@@ -335,7 +344,7 @@ class AuthRepo with ApiServices{
   }
 
   Future<Response?> dropLoad(Map<String, String> credentials) async {
-    Response? response = await apiPostRequests("admin/dropLoad.php", credentials);
+    Response? response = await apiPostRequests("drivers/dropLoad.php", credentials);
 
     if (response != null) {
       return response;
@@ -415,7 +424,7 @@ class AuthRepo with ApiServices{
   }
 
   Future<Response?> drDeliveredLoad(Map<String, String> credentials) async {
-    Response? response = await apiPostRequests("drivers/loads_assigned.php", credentials);
+    Response? response = await apiPostRequests("drivers/loads_delivered.php", credentials);
 
     if (response != null) {
       return response;
@@ -423,6 +432,8 @@ class AuthRepo with ApiServices{
 
     return null;
   }
+
+
   Future<Response?> dspRegLoad(Map<String, String> credentials) async {
     Response? response = await apiPostRequests("Despatchers/registered_load.php", credentials);
 
@@ -433,8 +444,8 @@ class AuthRepo with ApiServices{
     return null;
   }
 
-  Future<Response?> dspDeliveredLoads() async {
-    Response? response = await apiGetRequests("Despatchers/loads_delivered_list.php");
+  Future<Response?> dspDeliveredLoads(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("Despatchers/loads_delivered_list.php", credentials);
 
     if (response != null) {
       return response;
@@ -491,6 +502,129 @@ class AuthRepo with ApiServices{
 
   Future<Response?> getAssignedPickups(Map<String, String> credentials) async {
     Response? response = await apiPostRequests("drivers/pickups_assigned.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> getSingleLoadDetails(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/load_details.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> vehicleIncome(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("accountant/vehicle_income.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> getBol(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("drivers/bol/get_bol.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> deleteDrop(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/admin_delete_drop.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> deletePickup(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/admin_delete_pickup.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> updatePickup(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/admin_edit_pickup.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> updateDrop(Map<String, String> credentials) async {
+    Response? response = await apiPostRequests("admin/admin_edit_drop.php", credentials);
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> getCompanyIncome() async {
+    Response? response = await apiGetRequests("accountant/company_income.php");
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> staffsDue() async {
+    Response? response = await apiGetRequests("accountant/staff_due_for_payment.php");
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> driversDue() async {
+    Response? response = await apiGetRequests("accountant/drivers_due_for_payment.php");
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> driversPaid() async {
+    Response? response = await apiGetRequests("accountant/drivers_successfully_paid.php");
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+  Future<Response?> staffsPaid() async {
+    Response? response = await apiGetRequests("accountant/staff_successfully_paid.php");
+
+    if (response != null) {
+      return response;
+    }
+
+    return null;
+  }
+
+  Future<Response?> getPaidLoads() async {
+    Response? response = await apiGetRequests("accountant/paid_pickups.php");
 
     if (response != null) {
       return response;

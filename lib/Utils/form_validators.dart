@@ -13,6 +13,39 @@ mixin FormValidators{
     return null;
   }
 
+  String? vinValidator(String? value) {
+    if (value!.trim().isEmpty){
+      return 'VIN can not be empty';
+    }
+    else if (value.trim().length < 2) {
+      return 'VIN is Invalid';
+    }
+
+    return null;
+  }
+
+  String? vehicleIdValidator(String? value) {
+    if (value!.trim().isEmpty){
+      return 'Vehicle ID can not be empty';
+    }
+    else if (value.trim().length < 2) {
+      return 'Vehicle ID is Invalid';
+    }
+
+    return null;
+  }
+
+  String? plateNumberValidator(String? value) {
+    if (value!.trim().isEmpty){
+      return 'PlateNumber can not be empty';
+    }
+    else if (value.trim().length < 2) {
+      return 'PlateNumber is Invalid';
+    }
+
+    return null;
+  }
+
   String? validateLoadAmount(String? value) {
     if (value!.trim().isEmpty){
       return 'Rate can not be empty';
@@ -200,6 +233,7 @@ mixin FormValidators{
     }
     return null;
   }
+
   String? validateTime(String? value) {
     if (value!.trim().isEmpty) {
       return 'Select a Time';

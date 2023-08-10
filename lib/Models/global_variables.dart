@@ -50,3 +50,49 @@ String? loadToBereassignedId;
 String?  ratconForReassign;
 
 String? loadIdForDelivered;
+
+String? loadBrokerName;
+String? loadBrokerNum;
+String? loadBrokerEmail;
+String? loadShipperEmail;
+String? loadShipperAddress;
+String? loadRateCon;
+String? loadAmount;
+String? loadWeight;
+String? loadBolStatus;
+String?  loadPickups;
+String? loadDrops;
+
+String? editRateCon;
+String? editAmout;
+String? editDate;
+String?  editWeight;
+String? editDescription;
+String? editBrokerName;
+String? editBrokerEmail;
+String? editBrokerPhone;
+String? editShipperEmail;
+String? editShiperAdd;
+
+String? editPickID;
+String? editPickState ;
+String? editPickCity;
+String? editPickDate;
+String? editPickZip ;
+String? editPickAddress;
+String? editPickTime;
+String? editPickName;
+String? editPickLoadID;
+
+String? editDropID;
+String? editDropState ;
+String? editDropCity;
+String? editDropDate;
+String? editDropZip ;
+String? editDropAddress;
+String? editDropTime;
+String? editDropName;
+String? editDropLoadID;
+
+
+

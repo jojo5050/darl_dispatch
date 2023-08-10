@@ -56,6 +56,8 @@ class _AllDriversState extends State<AllDrivers> {
             ListView.builder(
                 itemCount: listOfActiveDrivers!.length,
                 itemBuilder: (context, index){
+                  var pic = listOfActiveDrivers![index]["picture"];
+                  var avatar = listOfActiveDrivers![index]["avatar"];
                   return GestureDetector(onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context){
                       return ClientProfilePage(staffInfo: listOfActiveDrivers![index] );
@@ -83,15 +85,19 @@ class _AllDriversState extends State<AllDrivers> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-
-                                  const CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: Colors.green,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                    ),
+                                  if(pic != null)
+                                      CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.green,
+                                      backgroundImage: NetworkImage(pic ?? ""),
+                                      )
+                                     else
+                                      CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.green,
+                                      backgroundImage: NetworkImage(avatar ?? ""),
                                   ),
+
                                 ],
                               ),
                               SizedBox(height: 1.h,),

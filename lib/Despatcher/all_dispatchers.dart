@@ -58,13 +58,14 @@ class _AllDispatchersState extends State<AllDispatchers> {
             ListView.builder(
                 itemCount: listOfStaffs!.length,
                 itemBuilder: (context, index){
+                  var pic = listOfStaffs![index]["picture"];
+                  var avatar = listOfStaffs![index]["avatar"];
                   return GestureDetector(onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context){
                       return ClientProfilePage(staffInfo: listOfStaffs![index] );
                     }));
 
                   },
-
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                       child: Container(
@@ -76,15 +77,18 @@ class _AllDispatchersState extends State<AllDispatchers> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(child: Row(children: [
-                                const CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.green,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: Colors.white,
+                                if(pic != null)
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.green,
+                                    backgroundImage: NetworkImage(pic ?? ""),
+                                  ) else
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.green,
+                                    backgroundImage: NetworkImage(avatar ?? ""),
                                   ),
-                                ),SizedBox(width: 3.w,),
-
+                                SizedBox(width: 3.w,),
                                 Column(crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
@@ -112,7 +116,11 @@ class _AllDispatchersState extends State<AllDispatchers> {
                                 ),
                               ],),),
 
-                              PopupMenuButton(
+                             Icon(Icons.arrow_forward_ios, color: Colors.white,)
+
+
+
+                             /* PopupMenuButton(
                                   color: Colors.black,
                                   elevation: 20,
                                   shape: OutlineInputBorder(
@@ -156,7 +164,7 @@ class _AllDispatchersState extends State<AllDispatchers> {
                                       ),
                                     ),
 
-                                  ]),
+                                  ]),*/
                             ],
                           ),
                         ),

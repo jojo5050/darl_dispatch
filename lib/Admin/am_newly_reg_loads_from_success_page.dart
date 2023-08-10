@@ -1,4 +1,5 @@
 
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +42,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
       onWillPop: willPopControll,
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
           child: Column(
               children: [
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,7 +64,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.sp,
+                            fontSize: 18.sp,
                             decoration: TextDecoration.none),
                       ),
                     ],
@@ -130,19 +131,19 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
 
                 Expanded(
                   child: Container(
-                      child: listOfLoads == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+                      child: listOfLoads == null ? Center(child: LoaderFadingBlue()):
                       listOfLoads!.isEmpty ?
                       Center(
                         child: Column(
                           children: [
                             SizedBox(height: 20.h,),
                             Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                            const Text(
+                             Text(
                               "No Load Found",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                                  fontSize: 17.sp),
                             )
                           ],
                         ),
@@ -150,9 +151,9 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                           itemCount: listOfLoads!.length,
                           itemBuilder: (context, index){
                             return Container(
-                              height: 30.h,
+                              height: 36.h,
                               child: Card(
-                                elevation: 10,
+                                elevation: 5,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)
                                 ),
@@ -172,7 +173,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                                   "RC:",
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 19.sp,
+                                                      fontSize: 18.sp,
                                                       fontWeight: FontWeight.bold),
                                                 ),
                                                 SizedBox(width: 2.w,),
@@ -180,7 +181,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                                   "${listOfLoads![index]["rateConfirmationID"]}",
                                                   style: TextStyle(
                                                       color: AppColors.dashboardtextcolor,
-                                                      fontSize: 19.sp,
+                                                      fontSize: 18.sp,
                                                       fontWeight: FontWeight.bold),
                                                 ),
                                               ],
@@ -314,25 +315,38 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                         ),
                                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Rate: \$", style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
-                                            SizedBox(width: 2.w,),
-                                            Container(
-                                              constraints: BoxConstraints(maxWidth: 150),
-                                              child: Text("${listOfLoads![index]["rate"]}",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                            Row(
+                                              children: [
+                                                Text("Rate \$:",  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                SizedBox(width: 2.w,),
+                                                Text("${listOfLoads![index]["rate"]}",  style: TextStyle(
+                                                  color: AppColors.dashboardtextcolor,
+                                                  fontSize: 17.sp, )),
+                                              ],
+                                            ),
+
+                                            Row(
+                                              children: [
+                                                Text("Weight(Kg):",  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                SizedBox(width: 2.w,),
+                                                Text("${listOfLoads![index]["weight"] ?? ""}",  style: TextStyle(
                                                     color: AppColors.dashboardtextcolor,
-                                                    fontSize: 17.sp, fontWeight: FontWeight.bold),),
-                                            )
-                                          ],),
+                                                    fontSize: 17.sp)),
+                                              ],
+                                            ),
+                                          ],
+
+                                        ),
                                         SizedBox(height: 1.h,),
 
 
                                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Broker:", style: TextStyle(
+                                            Text("Broker Name:", style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 18.sp, fontWeight: FontWeight.bold),),
                                             SizedBox(width: 2.w,),
@@ -352,7 +366,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
 
                                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Load Desc:",  style: TextStyle(
+                                            Text("Description:",  style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 18.sp, fontWeight: FontWeight.bold)),
                                             SizedBox(width: 2.w,),
@@ -362,24 +376,20 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                           ],
 
                                         ),
-                                        SizedBox(
-                                          height: 3.h,
-                                        ),
-                                        TextButton(onPressed: (){loadDetailsModal(index);}, child: Text("View Detail..",  style: TextStyle(
-                                            color: Colors.indigo,
-                                            fontSize: 17.sp, fontWeight: FontWeight.bold)),)
 
-                                        /*  Card(
+                                        SizedBox(height: 1.h,),
+
+                                        Card(
                                           color: Colors.blueAccent,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(15),
                                           ),
                                           elevation: 15,
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
+                                            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
                                             child: Column(
                                               children: [
-                                                Row(mainAxisAlignment: MainAxisAlignment.start,
+                                                Row(mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Text("Registered by:", style: TextStyle(
                                                         color: Colors.black,
@@ -387,7 +397,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                                     SizedBox(width: 2.w,),
                                                     Container(
                                                       constraints: BoxConstraints(maxWidth: 150),
-                                                      child: Text("${listOfLoads![index]["registeredBy"]}",
+                                                      child: Text("${listOfLoads![index]["registeredByName"] ?? ""}",
                                                         overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                             color: Colors.white,
@@ -398,7 +408,17 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                                               ],
                                             ),
                                           ),
-                                        ),*/
+                                        ),
+
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+
+                                        TextButton(onPressed: (){loadDetailsModal(index);}, child: Text("View Detail...",  style: TextStyle(
+                                            color: Colors.indigo,
+                                            fontSize: 17.sp, fontWeight: FontWeight.bold)),)
+
+
 
                                       ],
                                     ),
@@ -458,14 +478,14 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "RC:",
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.sp,
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.bold),
                   ),SizedBox(width: 2.w,),
                   Text(
                     "${listOfLoads![index]["rateConfirmationID"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 20.sp,
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -475,7 +495,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Load Desc:",
+                    "Description:",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp, fontWeight: FontWeight.bold),
@@ -485,7 +505,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["loadDescription"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -506,7 +526,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                         "\$"" ${listOfLoads![index]["rate"]}",
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
-                            fontSize: 17.sp, fontWeight: FontWeight.bold),
+                            fontSize: 17.sp),
                       ),
                     ],
                   ),
@@ -524,7 +544,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                         " ${listOfLoads![index]["weight"]}",
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
-                            fontSize: 17.sp, fontWeight: FontWeight.bold),
+                            fontSize: 17.sp,),
                       ),
                     ],
                   ),
@@ -545,7 +565,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["registeredBy"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -564,7 +584,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["dateRegistered"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -583,7 +603,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["brokerName"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -602,7 +622,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["brokerEmail"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -621,7 +641,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["brokerNumber"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp, ),
                   ),
                 ],
               ),
@@ -640,7 +660,7 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                     "${listOfLoads![index]["shipperEmail"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -656,13 +676,13 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
                   ),
                   SizedBox(width: 2.w,),
                   Container(
-                    constraints: BoxConstraints(maxWidth: 250),
+                    constraints: BoxConstraints(maxWidth: 220),
                     child: Text(
                       "${listOfLoads![index]["shipperAddress"]}",
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                           color: AppColors.dashboardtextcolor,
-                          fontSize: 17.sp, fontWeight: FontWeight.bold),
+                          fontSize: 17.sp,),
                     ),
                   ),
                 ],
@@ -723,7 +743,6 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
           => element[ "totalPickups"] == pickupStatus
               && element["totalDrops"] == dropStatus).toList();
         });
-
       }else {
 
       }
@@ -876,6 +895,16 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
 
   void getIDandPush(int index) {
     singleLoadID = listOfLoads![index]["id"];
+    editRateCon = listOfLoads![index]["rateConfirmationID"];
+    editAmout = listOfLoads![index]["rate"];
+    editDate = listOfLoads![index]["dateRegistered"];
+    editWeight = listOfLoads![index]["weight"];
+    editDescription = listOfLoads![index]["loadDescription"];
+    editBrokerName = listOfLoads![index]["brokerName"];
+    editBrokerEmail = listOfLoads![index]["brokerEmail"];
+    editBrokerPhone = listOfLoads![index]["brokerNumber"];
+    editShipperEmail = listOfLoads![index]["shipperEmail"];
+    editShiperAdd = listOfLoads![index]["shipperAddress"];
     Routers.pushNamed(context, '/editRegLoads');
   }
 
@@ -945,10 +974,10 @@ class _AdminNewlyRegLoadsFromSuccessState extends State<AdminNewlyRegLoadsFromSu
           AlertDialog(shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))),
             actions: <Widget>[
-               Center(
+              Center(
                 child: Text('The page you are navigating to is auto generated',
                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,
-                    fontSize: 17.sp
+                      fontSize: 17.sp
 
                   ),
                 ),

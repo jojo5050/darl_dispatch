@@ -27,8 +27,7 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
         body: SingleChildScrollView(
           child: Container(
               decoration: const BoxDecoration(
@@ -36,7 +35,7 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                       image: AssetImage("assets/images/generalDashBoardBg.png"),
                       fit: BoxFit.cover)),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 7.h),
                 child: Column(
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -131,7 +130,7 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                     Container(
                         child: profilePic == null ? CircularProgressIndicator():
                         CircleAvatar(
-                          radius: 65,
+                          radius: 58,
                           backgroundColor: Colors.transparent,
                           backgroundImage: NetworkImage(profilePic ?? ""),
                         )),
@@ -140,14 +139,14 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                     Row(mainAxisAlignment: MainAxisAlignment.center,
                       children:  [
                       Text("${userName ?? ""} ", style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.sp),)
+                          color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16.sp),)
                     ],),
                     SizedBox(height: 1.h,),
                     Row(mainAxisAlignment: MainAxisAlignment.center,
                       children:  [
                         Text("${userRole ?? ""}", style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.normal, fontSize: 18.sp),)
+                            fontStyle: FontStyle.normal, fontSize: 16.sp),)
                       ],),
                     SizedBox(height: 3.h,),
                     Container(
@@ -165,20 +164,20 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("TEL:", style: TextStyle(color: Colors.black,
-                                      fontSize: 19.sp, fontWeight: FontWeight.bold),),
+                                      fontSize: 17.sp, fontWeight: FontWeight.bold),),
                                   SizedBox(width: 2.w,),
                                   Text("${telNum ?? ""}", style: TextStyle(color: Colors.white,
-                                      fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                      fontSize: 16.sp, fontWeight: FontWeight.bold),),
                                 ],
                               ),
                           SizedBox(height: 3.h,),
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Email:", style: TextStyle(color: Colors.black,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 17.sp, fontWeight: FontWeight.bold),),
                               SizedBox(width: 2.w,),
                               Text("${email ?? ""}", style: TextStyle(color: Colors.white,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 16.sp, fontWeight: FontWeight.bold),),
                             ],
                           ),
                          /* SizedBox(height: 2.h,),
@@ -195,10 +194,10 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("A/C Number:", style: TextStyle(color: Colors.black,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 17.sp, fontWeight: FontWeight.bold),),
                               SizedBox(width: 2.w,),
                               Text("${accNum ?? ""}", style: TextStyle(color: Colors.white,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 16.sp, fontWeight: FontWeight.bold),),
                             ],
                           ),
 
@@ -206,10 +205,10 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Bank Name:", style: TextStyle(color: Colors.black,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 17.sp, fontWeight: FontWeight.bold),),
                               SizedBox(width: 2.w,),
                               Text("${bankName ?? ""}", style: TextStyle(color: Colors.white,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 16.sp, fontWeight: FontWeight.bold),),
                             ],
                           ),
 
@@ -217,10 +216,10 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Address:", style: TextStyle(color: Colors.black,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 17.sp, fontWeight: FontWeight.bold),),
                               SizedBox(width: 2.w,),
                               Text("${address ?? ""}", style: TextStyle(color: Colors.white,
-                                  fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                  fontSize: 16.sp, fontWeight: FontWeight.bold),),
                             ],
                           ),
                         ],),
@@ -232,8 +231,7 @@ class _DispatcherProfilePageState extends State<DispatcherProfilePage> {
               ),
             ),
         ),
-      ),
-    );
+      );
   }
 
   void signOut(BuildContext context) async {

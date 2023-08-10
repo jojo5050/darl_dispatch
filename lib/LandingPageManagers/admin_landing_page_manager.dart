@@ -8,8 +8,9 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../Admin/admin_home.dart';
 import '../Admin/admin_profile_page.dart';
 import '../Admin/manage_staff.dart';
-import '../Admin/reports.dart';
+import '../Admin/manage_reports.dart';
 import '../Chat/chat_users_list.dart';
+import '../Utils/routers.dart';
 
 
 
@@ -28,7 +29,7 @@ class _AdminLandingPageManagerState extends State<AdminLandingPageManager> {
     AdminHomePage(),
     AdminManageStaff(),
     ChatUsersList(),
-    Reports(),
+    ManageReports(),
     AdminProfilePage()
   ];
 
@@ -54,27 +55,32 @@ class _AdminLandingPageManagerState extends State<AdminLandingPageManager> {
     }
 
 
-    return Scaffold(
-      body: _pages[selectedIndex],
-      bottomNavigationBar: CircleBottomNavigationBar(
-        initialSelection: selectedIndex,
-        barHeight: viewPadding.bottom > 0 ? barHeightWithNotch : barHeight,
-        arcHeight: viewPadding.bottom > 0 ? arcHeightWithNotch : barHeight,
-        itemTextOff: viewPadding.bottom > 0 ? 0 : 1,
-        itemTextOn: viewPadding.bottom > 0 ? 0 : 1,
-        circleOutline: 15.0,
-        shadowAllowance: 0.0,
-        circleSize: 50.0,
-        blurShadowRadius: 50.0,
-        circleColor: Colors.white,
-        activeIconColor: Colors.blueAccent,
-        inactiveIconColor: Colors.black,
-        textColor: Colors.black,
-        hasElevationShadows: true,
+    return WillPopScope(
+      onWillPop: _onWillPop,
 
-        barBackgroundColor: Colors.white,
-        tabs: getTabsData(),
-        onTabChangedListener: (index) => setState(() => selectedIndex = index),
+      child: Scaffold(
+        body: _pages[selectedIndex],
+
+        bottomNavigationBar: CircleBottomNavigationBar(
+          initialSelection: selectedIndex,
+          barHeight: viewPadding.bottom > 0 ? barHeightWithNotch : barHeight,
+          arcHeight: viewPadding.bottom > 0 ? arcHeightWithNotch : barHeight,
+          itemTextOff: viewPadding.bottom > 0 ? 0 : 1,
+          itemTextOn: viewPadding.bottom > 0 ? 0 : 1,
+          circleOutline: 15.0,
+          shadowAllowance: 0.0,
+          circleSize: 50.0,
+          blurShadowRadius: 50.0,
+          circleColor: Colors.white,
+          activeIconColor: Colors.blueAccent,
+          inactiveIconColor: Colors.black,
+          textColor: Colors.black,
+          hasElevationShadows: true,
+
+          barBackgroundColor: Colors.white,
+          tabs: getTabsData(),
+          onTabChangedListener: (index) => setState(() => selectedIndex = index),
+        ),
       ),
     );
   }
@@ -120,5 +126,47 @@ class _AdminLandingPageManagerState extends State<AdminLandingPageManager> {
   }
 
 
+  Future<bool> _onWillPop() async {
+    if (selectedIndex != 0) {
+      setState(() {
+        selectedIndex = 0;
+      });
+      Routers.replaceAllWithName(context, '/admin_landing_manager');
+    }else{
+      showPopUp();
+    }
+    return true;
+  }
 
+  void showPopUp() {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            //  title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit the App'),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () => exitApp(),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+    );
+  }
+
+  exitApp() {
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    });
+  }
 }

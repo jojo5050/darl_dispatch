@@ -8,6 +8,7 @@ import '../../../AuthManagers/authRepo.dart';
 import '../../../ConstantHelper/colors.dart';
 import '../../../Models/global_variables.dart';
 import '../../../Utils/routers.dart';
+import '../Utils/loaderFadingBlue.dart';
 
 
 class DspRegisteredWithPDLoadsPreview extends StatefulWidget {
@@ -39,7 +40,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
         child: Column(
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -58,7 +59,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                       style: TextStyle(
                           color: AppColors.dashboardtextcolor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20.sp,
+                          fontSize: 18.sp,
                           decoration: TextDecoration.none),
                     ),
 
@@ -124,7 +125,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
               Expanded(
                 child: Container(
-                    child: listOfLoads == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+                    child: listOfLoads == null ? Center(child: LoaderFadingBlue()):
                     listOfLoads!.isEmpty ?
                     Center(
                       child: Column(
@@ -143,9 +144,9 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                         itemCount: listOfLoads!.length,
                         itemBuilder: (context, index){
                           return Container(
-                            height: 37.h,
+                            height: 39.h,
                             child: Card(
-                              elevation: 10,
+                              elevation: 5,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -339,7 +340,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                                                         Text(
                                                           "Delete",
                                                           style: TextStyle(
-                                                              color: Colors.white,
+                                                              color: Colors.red,
                                                               fontSize: 15.sp,
                                                               fontWeight: FontWeight.bold),
                                                         ),
@@ -357,13 +358,29 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Rate \$:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfLoads![index]["rate"]}",  style: TextStyle(
-                                              color: AppColors.dashboardtextcolor,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Row(
+                                            children: [
+                                              Text("Rate \$:",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 2.w,),
+                                              Text("${listOfLoads![index]["rate"]}",  style: TextStyle(
+                                                color: AppColors.dashboardtextcolor,
+                                                fontSize: 17.sp, )),
+                                            ],
+                                          ),
+
+                                          Row(
+                                            children: [
+                                              Text("Weight(Kg):",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 2.w,),
+                                              Text("${listOfLoads![index]["weight"] ?? ""}",  style: TextStyle(
+                                                  color: AppColors.dashboardtextcolor,
+                                                  fontSize: 17.sp)),
+                                            ],
+                                          ),
                                         ],
 
                                       ),
@@ -373,13 +390,13 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Broker:",  style: TextStyle(
+                                          Text("Broker Name:",  style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 2.w,),
                                           Text("${listOfLoads![index]["brokerName"]}",  style: TextStyle(
                                               color: AppColors.dashboardtextcolor,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              fontSize: 17.sp)),
                                         ],
 
                                       ),
@@ -390,81 +407,87 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Pickups:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfLoads![index]["totalPickups"]}",  style: TextStyle(
-                                              color: AppColors.dashboardtextcolor,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Row(
+                                            children: [
+                                              Text("Pickups:",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 2.w,),
+                                              Text("${listOfLoads![index]["totalPickups"]}",  style: TextStyle(
+                                                color: AppColors.dashboardtextcolor,
+                                                fontSize: 17.sp, )),
+                                            ],
+                                          ),
+
+                                          Row(
+                                            children: [
+                                              Text("Drops:",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 2.w,),
+                                              Text("${listOfLoads![index]["totalDrops"] ?? ""}",  style: TextStyle(
+                                                color: AppColors.dashboardtextcolor,
+                                                fontSize: 17.sp, )),
+                                            ],
+                                          ),
                                         ],
 
                                       ),
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
+
+                                      SizedBox(height: 1.w,),
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Drops:",  style: TextStyle(
+                                          Text("Description:",  style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfLoads![index]["totalDrops"]}",  style: TextStyle(
-                                              color: AppColors.dashboardtextcolor,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          SizedBox(width: 2.w,),
+                                          Text("${listOfLoads![index]["loadDescription"]}",  style: TextStyle(
+                                            color: AppColors.dashboardtextcolor,
+                                            fontSize: 17.sp,)),
                                         ],
 
                                       ),
                                       SizedBox(height: 1.h,),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Load Desc:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfLoads![index]["loadDescription"]}",  style: TextStyle(
-                                              color: AppColors.dashboardtextcolor,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
 
-                                      ),
-                                      SizedBox(
-                                        height: 3.h,
-                                      ),
-                                      TextButton(onPressed: (){loadDetailsModal(index);}, child: Text("View Detail..",  style: TextStyle(
-                                          color: Colors.indigo,
-                                          fontSize: 17.sp, fontWeight: FontWeight.bold)),)
-                                      /*  Card(
-                                            color: Colors.blueAccent,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15),
-                                            ),
-                                            elevation: 15,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
-                                              child: Column(
+                                      Card(
+                                        color: Colors.blueAccent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        elevation: 15,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                                          child: Column(
+                                            children: [
+                                              Row(mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
-                                                  Row(mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Text("Registered by:", style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16.sp, fontWeight: FontWeight.bold),),
-                                                      SizedBox(width: 2.w,),
-                                                      Container(
-                                                        constraints: BoxConstraints(maxWidth: 150),
-                                                        child: Text("${listOfLoads![index]["registeredBy"]}",
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 17.sp, fontWeight: FontWeight.bold),),
-                                                      )
-                                                    ],),
+                                                  Text("Registered by:", style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16.sp, fontWeight: FontWeight.bold),),
+                                                  SizedBox(width: 2.w,),
+                                                  Container(
+                                                    constraints: BoxConstraints(maxWidth: 150),
+                                                    child: Text("${listOfLoads![index]["registeredByName"] ?? ""}",
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 17.sp, fontWeight: FontWeight.bold),),
+                                                  )
+                                                ],),
 
-                                                ],
-                                              ),
-                                            ),
-                                          ),*/
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 1.h,),
+
+
+                                      TextButton(onPressed: (){loadDetailsModal(index);}, child: Text("View Detail...",  style: TextStyle(
+                                          color: Colors.indigo,
+                                          fontSize: 17.sp, fontWeight: FontWeight.bold)),),
+
 
                                     ],
                                   ),
@@ -524,7 +547,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "RC:",
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.sp,
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 2.w,),
@@ -532,7 +555,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["rateConfirmationID"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 20.sp,
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -542,7 +565,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Load Desc:",
+                    "Description:",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp, fontWeight: FontWeight.bold),
@@ -552,7 +575,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["loadDescription"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -573,7 +596,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                         "\$"" ${listOfLoads![index]["rate"]}",
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
-                            fontSize: 17.sp, fontWeight: FontWeight.bold),
+                            fontSize: 17.sp,),
                       ),
                     ],
                   ),
@@ -591,7 +614,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                         " ${listOfLoads![index]["weight"]}",
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
-                            fontSize: 17.sp, fontWeight: FontWeight.bold),
+                            fontSize: 17.sp,),
                       ),
                     ],
                   ),
@@ -612,7 +635,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["registeredBy"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp, ),
                   ),
                 ],
               ),
@@ -631,7 +654,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["dateRegistered"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp, ),
                   ),
                 ],
               ),
@@ -650,7 +673,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["brokerName"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -669,7 +692,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["brokerEmail"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp,),
                   ),
                 ],
               ),
@@ -688,7 +711,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["brokerNumber"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp, ),
                   ),
                 ],
               ),
@@ -707,7 +730,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                     "${listOfLoads![index]["shipperEmail"]}",
                     style: TextStyle(
                         color: AppColors.dashboardtextcolor,
-                        fontSize: 17.sp, fontWeight: FontWeight.bold),
+                        fontSize: 17.sp, ),
                   ),
                 ],
               ),
@@ -729,7 +752,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                           color: AppColors.dashboardtextcolor,
-                          fontSize: 17.sp, fontWeight: FontWeight.bold),
+                          fontSize: 17.sp, ),
                     ),
                   ),
                 ],
@@ -814,6 +837,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
       if(response != null && response.statusCode == 200 && response.data["success"] == 200){
         showSuccessDialog();
+        getAllLoads();
 
       }else{
         showErr();
@@ -942,6 +966,16 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
   void getIDandPush(int index) {
     singleLoadID = listOfLoads![index]["id"];
+    editRateCon = listOfLoads![index]["rateConfirmationID"];
+    editAmout = listOfLoads![index]["rate"];
+    editDate = listOfLoads![index]["dateRegistered"];
+    editWeight = listOfLoads![index]["weight"];
+    editDescription = listOfLoads![index]["loadDescription"];
+    editBrokerName = listOfLoads![index]["brokerName"];
+    editBrokerEmail = listOfLoads![index]["brokerEmail"];
+    editBrokerPhone = listOfLoads![index]["brokerNumber"];
+    editShipperEmail = listOfLoads![index]["shipperEmail"];
+    editShiperAdd = listOfLoads![index]["shipperAddress"];
     Routers.pushNamed(context, '/editRegLoads');
   }
 
@@ -967,7 +1001,7 @@ class _DspRegisteredWithPDLoadsPreviewState extends State<DspRegisteredWithPDLoa
 
   void getIdNavigate(int index) {
     loadsID = listOfLoads![index]["id"];
-    Routers.pushNamed(context, '/registeredPickDrop');
+    Routers.pushNamed(context, '/dspRegisteredPickDrop');
   }
 
   void navigateToAddPickDrop(int index) {

@@ -2,11 +2,13 @@ import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../AuthManagers/authRepo.dart';
 import '../../../ConstantHelper/colors.dart';
 import '../../../Models/global_variables.dart';
+import '../Utils/loaderFadingBlue.dart';
 
 class LoadAssignedDetails extends StatefulWidget {
   const LoadAssignedDetails({Key? key}) : super(key: key);
@@ -103,7 +105,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                   style: TextStyle(color: AppColors.dashboardtextcolor,
                   fontWeight: FontWeight.bold, fontSize: 16.sp),)),
             Container(
-              height: 45.h,
+              height: 47.h,
                 child: Card(
                   elevation: 10,
                   shape: RoundedRectangleBorder(
@@ -142,7 +144,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${amount ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp,)),
                             ],
 
                           ),
@@ -158,7 +160,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${weight ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp,)),
                             ],
 
                           ),
@@ -175,7 +177,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${brokerName ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp,)),
                             ],
 
                           ),
@@ -192,7 +194,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${brokerEmail ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp, )),
                             ],
 
                           ),
@@ -207,7 +209,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${brokerTel ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp,)),
                             ],
 
                           ),
@@ -225,7 +227,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                           Text("${shiperEmail ?? ""}",  style: TextStyle(
                               color: AppColors.dashboardtextcolor,
-                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                              fontSize: 17.sp, )),
                         ],
 
                       ),
@@ -239,9 +241,13 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                           SizedBox(width: 2.w,),
 
-                          Text("${shiperAddres ?? ""}",  style: TextStyle(
-                              color: AppColors.dashboardtextcolor,
-                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                          Container(constraints: BoxConstraints(maxWidth: 170),
+                            child: Text("${shiperAddres ?? ""}",
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                color: AppColors.dashboardtextcolor,
+                                fontSize: 17.sp, )),
+                          ),
                         ],
 
                       ),
@@ -255,7 +261,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${driverName ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp, )),
                             ],
 
                           ),
@@ -272,7 +278,7 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
 
                               Text("${driverTel ?? ""}",  style: TextStyle(
                                   color: AppColors.dashboardtextcolor,
-                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                  fontSize: 17.sp, )),
                             ],
 
                           ),
@@ -298,29 +304,31 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
             SizedBox(height: 1.h,),
             Container(
               height: 40.h,
-              child: listOfPickups == null ? Center(child: CircularProgressIndicator(color: Colors.blue,)):
+              child: listOfPickups == null ? Center(child: LoaderFadingBlue()):
               listOfPickups!.isEmpty ?
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                    const Text(
-                      "No Registered Pickup Yet",
+                    Icon(Icons.question_mark, color: Colors.grey, size: 30.sp,),
+                     Text(
+                      "No Pickup Found",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                          fontSize: 17.sp),
                     )
                   ],
                 ),
               ) : ListView.builder(
                   itemCount: listOfPickups!.length,
                   itemBuilder: (context, index){
+
+                    var pickStatus = listOfPickups![index]["pickedStatus"];
                     return GestureDetector( onTap: (){
 
                     },
                       child: Container(
-                        height: 30.h,
+                        height: 37.h,
                         child: Card(
                           color: Colors.green,
                           elevation: 10,
@@ -336,67 +344,24 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 1.h,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(mainAxisAlignment: MainAxisAlignment.start,
+                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text("Pickup State:",  style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                               SizedBox(width: 4.w,),
-                                              Text("${listOfPickups![index]["state"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              Container(
+                                                constraints: BoxConstraints(maxWidth: 250),
+                                                child: Text("${listOfPickups![index]["state"]}",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              ),
                                             ],
 
                                           ),
-                                          PopupMenuButton(
-                                              color: Colors.black,
-                                              elevation: 20,
-                                              shape: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(15)),
-                                              icon: const Center(
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.black,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: Container(
-                                                    child: GestureDetector(
-                                                      onTap: (){
-                                                        //  showPopup(index);
-                                                      },
-                                                      child: Row(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.delete,
-                                                            color: Colors.red,
-                                                            size: 20,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Text(
-                                                            "Delete",
-                                                            style: TextStyle(
-                                                                color: Colors.white,
-                                                                fontSize: 15.sp,
-                                                                fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
 
-                                              ]),
-                                        ],
-                                      ),
 
                                       SizedBox(
                                         height: 1.h,
@@ -408,9 +373,14 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                               color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 4.w,),
-                                          Text("${listOfPickups![index]["city"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Container(
+                                            constraints: BoxConstraints(maxWidth: 250),
+                                            child: Text("${listOfPickups![index]["city"]}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ),
                                         ],
 
                                       ),
@@ -463,10 +433,53 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                               color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 4.w,),
-                                          Text("${listOfPickups![index]["address"]}",  style: TextStyle(
-                                              color: Colors.white,
+                                          Container(constraints: BoxConstraints(maxWidth: 200),
+                                            child: Text("${listOfPickups![index]["address"]}",
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ),
+
+                                        ],
+
+                                      ),
+                                      SizedBox(height: 2.h,),
+
+                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("PICK STATUS:",  style: TextStyle(
+                                              color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
 
+                                          if(pickStatus == "0" || pickStatus == null)
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                    vertical: 1.h),
+                                                child: Text("PENDING", style: TextStyle(color: Colors.red,
+                                                    fontWeight: FontWeight.bold),),
+                                              ),
+                                            )
+                                          else
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                    vertical: 1.h),
+                                                child: Text("PICKED", style: TextStyle(color: Colors.black,
+                                                    fontWeight: FontWeight.bold),),
+                                              ),
+                                            )
                                         ],
 
                                       ),
@@ -498,30 +511,30 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
             SizedBox(height: 1.h,),
             Container(
               height: 40.h,
-              child: listOfDrops == null ? Center(child: CircularProgressIndicator(color: Colors.blue,)):
+              child: listOfDrops == null ? Center(child: LoaderFadingBlue()):
               listOfDrops!.isEmpty ?
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                    const Text(
-                      "No Registered Drop Yet",
+                    Icon(Icons.question_mark, color: Colors.grey, size: 30.sp,),
+                     Text(
+                      "No Registered Drop",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                          fontSize: 17.sp),
                     )
                   ],
                 ),
               ) : ListView.builder(
                   itemCount: listOfDrops!.length,
                   itemBuilder: (context, index){
-                 //   final count = index + 1;
+                    var dropStatus = listOfDrops![index]["status"];
                     return GestureDetector( onTap: (){
 
                     },
                       child: Container(
-                        height: 35.h,
+                        height: 37.h,
                         child: Card(
                           color: Colors.grey,
                           elevation: 10,
@@ -537,68 +550,25 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 1.h,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
 
-                                              Text("Drop State:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${listOfDrops![index]["state"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("Drop State:",
+                                                    style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 2.w,),
+                                              Container(
+                                                constraints: BoxConstraints(maxWidth: 250),
+                                                child: Text("${listOfDrops![index]["state"]}",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              ),
                                             ],
 
                                           ),
-                                          PopupMenuButton(
-                                              color: Colors.black,
-                                              elevation: 20,
-                                              shape: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(15)),
-                                              icon: const Center(
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.black,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: Container(
-                                                    child: GestureDetector(
-                                                      onTap: (){
-                                                        //  showPopup(index);
-                                                      },
-                                                      child: Row(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.delete,
-                                                            color: Colors.red,
-                                                            size: 20,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Text(
-                                                            "Delete",
-                                                            style: TextStyle(
-                                                                color: Colors.white,
-                                                                fontSize: 15.sp,
-                                                                fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-
-                                              ]),
-                                        ],
-                                      ),
 
                                       SizedBox(
                                         height: 1.h,
@@ -610,9 +580,14 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                               color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["city"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Container(
+                                            constraints: BoxConstraints(maxWidth: 250),
+                                            child: Text("${listOfDrops![index]["city"]}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ),
                                         ],
 
                                       ),
@@ -665,13 +640,56 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
                                               color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["address"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          Container(
+                                            constraints: BoxConstraints(maxWidth: 200),
+                                            child: Text("${listOfDrops![index]["address"]}",
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ),
                                         ],
 
                                       ),
-                                      SizedBox(height: 1.h,),
+                                      SizedBox(height: 2.h,),
+                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("DROP STATUS:",  style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
+
+                                          if(dropStatus == "0" || dropStatus == null)
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                    vertical: 1.h),
+                                                child: Text("PENDING", style: TextStyle(color: Colors.red,
+                                                    fontWeight: FontWeight.bold),),
+                                              ),
+                                            )
+                                          else
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                    vertical: 1.h),
+                                                child: Text("DROPPED", style: TextStyle(color: Colors.black,
+                                                    fontWeight: FontWeight.bold),),
+                                              ),
+                                            )
+
+                                        ],
+
+                                      ),
 
 
                                     ],
@@ -738,10 +756,6 @@ class _LoadAssignedDetailsState extends State<LoadAssignedDetails> {
         if(regPickups.length > 0){
           for(int i = 0; i < regPickups.length; i++){
             Map<String,dynamic> regLoadList = regPickups[i];
-            int pickedStatus = int.parse(regLoadList["pickedStatus"]);
-            String text = pickedStatus == 0 ? "notPicked" : "picked";
-            regLoadList["notPicked"] = text;
-
             data.add(regLoadList);
           }
         }

@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,34 +33,46 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
 
   User? currentuser = FirebaseAuth.instance.currentUser;
   CollectionReference usersRef = FirebaseFirestore.instance.collection("Users");
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   bool _hasInternet = true;
 
-  final int _locationUpdateInterval = 10;
+  List<Map<String, dynamic>>? listOfDeliveredLoads;
+  String loadStatus = "3";
 
-  LocationData? _currentLocation;
-
-  Timer? timer;
-
-  List<LocationData> _locationList = [];
-
-  String? _currentUserID;
-
-  Timer? _firestoreUpdateTime;
-
-  int _firestoreUpdateInterval = 60;
+  var errmsg;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+  //  setStatus("status");
     checkInternetConnection();
     getUserDetails();
     getAllStaffs();
+    getDelevered();
     getAllDrivers();
     getTrucks();
     getTrailers();
     getRegLoads();
     super.initState();
+  }
+
+  void setStatus(String status) async{
+        await usersRef.doc(firebaseAuth.currentUser!.uid).update({
+          "status": status
+        });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      checkInternetConnection();
+      setStatus("Online");
+    }else{
+      setStatus("Offline");
+    }
   }
 
   @override
@@ -68,13 +81,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      checkInternetConnection();
-    }
-  }
+
 
   Future<void> checkInternetConnection() async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -92,9 +99,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
           body: _hasInternet ?
           Stack(children: [
             Container(
@@ -118,7 +123,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                         Column(
                           children: [
                             Container(
-                                child: profilePic == null ? CircularProgressIndicator():
+                                child: profilePic == null ? LoaderFadingBlue():
                                 CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.transparent,
@@ -126,7 +131,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                 )),
                             SizedBox(height: 0.5.h,),
                             Text("${userName ?? ""} ", style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15.sp),),
+                                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14.sp),),
                           ],
                         )
                       ],
@@ -171,7 +176,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Employees",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -183,9 +188,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         horizontal: 10.w),
                                     child:
                                     listOfStaffs == null
-                                        ? CircularProgressIndicator(
-                                      color: Colors.green,)
-                                        :
+                                        ? LoaderFadingBlue() :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
                                           .spaceBetween,
@@ -236,7 +239,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Loads Delivered",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -247,18 +250,23 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10.w),
                                     child:
+                                    listOfDeliveredLoads == null
+                                        ? LoaderFadingBlue() :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
                                           .spaceBetween,
                                       children: [
                                         Text(
-                                          "0",
+                                          "${listOfDeliveredLoads!.length ?? ""}",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
-                                        Icon(Icons.check_circle,
-                                          color: Colors.indigo, size: 25.sp,)
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.indigo,
+                                          size: 25,
+                                        )
                                       ],
                                     ),
                                   )
@@ -293,7 +301,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Registered Loads",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -305,8 +313,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         horizontal: 10.w),
                                     child:
                                     listOfLoads == null
-                                        ? CircularProgressIndicator(
-                                      color: Colors.green,)
+                                        ? LoaderFadingBlue()
                                         :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
@@ -316,7 +323,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "${listOfLoads!.length ?? ""}",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
                                         Icon(Icons.done_all, color: Colors.indigo,
                                           size: 25.sp,)
@@ -356,7 +363,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Drivers",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -368,8 +375,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         horizontal: 10.w),
                                     child:
                                     listOfDrivers == null
-                                        ? CircularProgressIndicator(
-                                      color: Colors.green,)
+                                        ? LoaderFadingBlue()
                                         :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
@@ -379,7 +385,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "${listOfDrivers!.length ?? ""}",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
                                         Icon(Icons.directions_car,
                                           color: Colors.indigo, size: 25.sp,)
@@ -420,7 +426,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Truck",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -432,8 +438,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         horizontal: 10.w),
                                     child:
                                     listOfTrucks == null
-                                        ? CircularProgressIndicator(
-                                      color: Colors.green,)
+                                        ? LoaderFadingBlue()
                                         :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
@@ -443,7 +448,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "${listOfTrucks!.length ?? ""}",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
                                         Icon(Icons.local_shipping,
                                           color: Colors.indigo, size: 25.sp,)
@@ -483,7 +488,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Trailers",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -495,8 +500,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         horizontal: 10.w),
                                     child:
                                     listOfTrailers == null
-                                        ? CircularProgressIndicator(
-                                      color: Colors.green,)
+                                        ? LoaderFadingBlue()
                                         :
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment
@@ -506,7 +510,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "${listOfTrailers!.length ?? ""}",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
                                         Icon(Icons.train, color: Colors.indigo,
                                           size: 25.sp,)
@@ -546,7 +550,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "Total CashOut",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )),
@@ -564,7 +568,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                           "\$ 0",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20.sp),
+                                              fontSize: 18.sp),
                                         ),
                                         Icon(Icons.money, color: Colors.indigo,
                                           size: 25.sp,)
@@ -727,8 +731,10 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                             ),
                           ),
                           InkWell(onTap: () {
-                            Routers.pushNamed(
-                                context, '/adminRegLoadSuccessPage');
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(
+                              content: Text("work in progress, try again later"),
+                              duration: Duration(seconds: 2),));
                           },
                             child: Card(
                                 elevation: 10,
@@ -744,7 +750,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
                                         Icons.payments_outlined,
                                         color: Colors.black, size: 40,)),
 
-                                      Text("My Pay Roll", style: TextStyle(
+                                      Text("Pay Roll", style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14.sp),)
 
@@ -790,8 +796,7 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
           ]
           ) : buildNoInternetPopup()
 
-      ),
-    );
+      );
   }
 
   void getUserDetails() async {
@@ -814,9 +819,21 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
         setState(() {
           userName = userdata["name"];
         });
-        setState(() {
-          profilePic = userdata["image"];
-        });
+        print(",,,,,,,,,,,,,,,,,,,,, $userName");
+
+        var pic = userdata["picture"];
+        var avatar = userdata["image"];
+
+        if(pic != null){
+          setState(() {
+            profilePic = pic;
+          });
+        }else{
+          setState(() {
+            profilePic = avatar;
+          });
+        }
+
         setState(() {
           email = userdata["email"];
         });
@@ -1050,39 +1067,6 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
     );
   }
 
-  exitApp() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-    });
-  }
-
-  Future<bool> willPopControll() async {
-    return (await showDialog(
-      context: context,
-      builder: (context) =>
-          AlertDialog(
-            //  title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit the App'),
-            actions: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  TextButton(
-                    onPressed: () => exitApp(),
-                    child: new Text('Yes'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-    )) ??
-        false;
-  }
-
   void getCurrentLocation() async {
     Location location = Location();
     LocationData? locationData;
@@ -1138,5 +1122,46 @@ class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserv
       print('Error creating user location: $error');
     });
 
+  }
+
+  void getDelevered() async {
+    final AuthRepo authRepo = AuthRepo();
+    try {
+      Response? response = await authRepo.fetchAllRegLoads();
+      if (response != null && response.statusCode == 200 &&
+          response.data["status"] == "success") {
+        List regLoads = response.data["data"]["docs"];
+
+        List<Map<String, dynamic>> data = [];
+
+        if (regLoads.length > 0) {
+          for (int i = 0; i < regLoads.length; i++) {
+            Map<String, dynamic> deliveredLoadsList = regLoads[i];
+            data.add(deliveredLoadsList);
+          }
+        }
+        setState(() {
+          listOfDeliveredLoads = data.where((element)
+          => element["status"] == loadStatus).toList();
+        });
+
+      } else {
+        // stopLoader();
+        setState(() {
+          errmsg = response!.data["message"];
+        });
+
+      }
+    } catch (e, str) {
+      debugPrint("Error: $e");
+      debugPrint("StackTrace: $str");
+    }
+
+  }
+
+  exitApp() {
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    });
   }
 }

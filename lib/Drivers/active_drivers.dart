@@ -20,6 +20,8 @@ class _ActiveDriversState extends State<ActiveDrivers> {
 
   List<Map<String, dynamic>>? emtingData;
 
+  String driverStatus = '2';
+
 
   @override
   void initState() {
@@ -42,6 +44,7 @@ class _ActiveDriversState extends State<ActiveDrivers> {
             Center(
               child: Column(
                 children: [
+                  SizedBox(height: 20.h,),
                   Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
                   const Text(
                     "No Active Driver",
@@ -56,6 +59,8 @@ class _ActiveDriversState extends State<ActiveDrivers> {
             ListView.builder(
                 itemCount: listOfActiveDrivers!.length,
                 itemBuilder: (context, index){
+                  var pic = listOfActiveDrivers![index]["picture"];
+                  var avatar = listOfActiveDrivers![index]["avatar"];
                   return GestureDetector(onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context){
                       return ClientProfilePage(staffInfo: listOfActiveDrivers![index] );
@@ -83,15 +88,18 @@ class _ActiveDriversState extends State<ActiveDrivers> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-
-                                        const CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor: Colors.grey,
-                                          child: Icon(
-                                            Icons.person,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                       if(pic != null)
+                                         CircleAvatar(
+                                           radius: 20,
+                                           backgroundColor: Colors.green,
+                                           backgroundImage: NetworkImage(pic ?? ""),
+                                         )
+                                        else
+                                         CircleAvatar(
+                                           radius: 20,
+                                           backgroundColor: Colors.green,
+                                           backgroundImage: NetworkImage(avatar ?? ""),
+                                         )
                                       ],
                                     ),
                                     SizedBox(height: 1.h,),
@@ -185,7 +193,7 @@ class _ActiveDriversState extends State<ActiveDrivers> {
   void getActiveDrivers() async {
     final AuthRepo authRepo = AuthRepo();
     try{
-      Response? response = await authRepo.activeDrivers();
+      Response? response = await authRepo.allDrivers();
 
       if(response != null && response.statusCode == 200){
         List activeDrivers = response.data["data"]["docs"];
@@ -199,7 +207,8 @@ class _ActiveDriversState extends State<ActiveDrivers> {
           }
         }
         setState(() {
-          listOfActiveDrivers = data;
+          listOfActiveDrivers = data.where((element) =>
+          element["status"] == driverStatus).toList();
         });
 
         print("printing list of loads asssssss $listOfActiveDrivers");

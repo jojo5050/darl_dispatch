@@ -594,14 +594,14 @@ class _RegLoadsWithPickDropPreviewState extends State<RegLoadsWithPickDropPrevie
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Shipper Address ",
+                      "Shipper Address",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.sp, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 2.w,),
                     Container(
-                      constraints: BoxConstraints(maxWidth: 250),
+                      constraints: BoxConstraints(maxWidth: 220),
                       child: Text(
                         "${listOfLoads![index]["shipperAddress"]}",
                         overflow: TextOverflow.clip,

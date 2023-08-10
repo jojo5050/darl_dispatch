@@ -1,3 +1,4 @@
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +8,7 @@ import '../../../AuthManagers/authRepo.dart';
 import '../../../ConstantHelper/colors.dart';
 import '../../../Utils/routers.dart';
 import '../../Utils/localstorage.dart';
+import '../Models/global_variables.dart';
 
 
 class DspLoadDeliveredPreview extends StatefulWidget {
@@ -31,59 +33,38 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
           child: Column(children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              InkWell(onTap: () {
-                Navigator.of(context).pop();
-                },
-                child: SvgPicture.asset(
-                 "assets/images/backarrowicon.svg",
-                 height: 25,
-                 width: 25,
-                ),
-              ),
-              Text("Delivered Loads",
-                style: TextStyle(
-                    color: AppColors.dashboardtextcolor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.sp,
-                    decoration: TextDecoration.none),),
-
-              Container(
-                height: 0,
-                width: 0,
-              ),
-            ]),
 
             Expanded(
               child: Container(
-                  child: listOfDeliveredLoads == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+                  child: listOfDeliveredLoads == null ? Center(child: LoaderFadingBlue()):
                   listOfDeliveredLoads!.isEmpty ?
                   Center(
                     child: Column(
                       children: [
                         SizedBox(height: 20.h,),
                         Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                        const Text(
+                         Text(
                           "No Delivered Loads",
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                              fontSize: 16.sp),
                         )
                       ],
                     ),
                   ) : ListView.builder(
                       itemCount: listOfDeliveredLoads!.length,
                       itemBuilder: (context, index){
+                        var bolStatus = listOfDeliveredLoads![index]["bolStatus"];
                         return GestureDetector( onTap: (){
                           //  loadDetailsModal(index);
                         },
                           child: Container(
-                            height: 40.h,
+                            height: 33.h,
                             child: Card(
-                              elevation: 10,
+                              elevation: 5,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
@@ -97,6 +78,8 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
+                                          Text("RC:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19.sp),),
+                                          SizedBox(width: 2.w,),
                                           Text(
                                             "${listOfDeliveredLoads![index]["rateConfirmationID"]}",
                                             style: TextStyle(
@@ -104,53 +87,6 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
                                                 fontSize: 19.sp,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          PopupMenuButton(
-                                              color: Colors.black,
-                                              elevation: 20,
-                                              shape: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(15)),
-                                              icon: const Center(
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.black,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                              onSelected: (value){
-                                                /* switch (value){
-                                                      case 1: loadDetailsModal(index);
-                                                      break;
-                                                      case 2: getIDandPush(index);
-                                                      break;
-                                                    }*/
-
-                                              },
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: Container(
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.remove_red_eye_outlined,
-                                                          color: Colors.green,
-                                                          size: 20,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Text(
-                                                          "View",
-                                                          style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 15.sp,
-                                                              fontWeight: FontWeight.bold),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ]),
                                         ],
                                       ),
 
@@ -160,12 +96,12 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Load Desc:",  style: TextStyle(
+                                          Text("Description:",  style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 2.w,),
                                           Text("${listOfDeliveredLoads![index]["loadDescription"]}",  style: TextStyle(
-                                              color: Colors.indigo,
+                                              color: AppColors.dashboardtextcolor,
                                               fontSize: 16.sp, fontWeight: FontWeight.bold)),
                                         ],
 
@@ -180,7 +116,7 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 2.w,),
                                           Text("${listOfDeliveredLoads![index]["brokerName"]}",  style: TextStyle(
-                                              color: Colors.indigo,
+                                              color: AppColors.dashboardtextcolor,
                                               fontSize: 16.sp, fontWeight: FontWeight.bold)),
                                         ],
                                       ),
@@ -194,7 +130,7 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
                                               fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                           SizedBox(width: 2.w,),
                                           Text("${listOfDeliveredLoads![index]["brokerNumber"]}",  style: TextStyle(
-                                              color: Colors.indigo,
+                                              color: AppColors.dashboardtextcolor,
                                               fontSize: 16.sp, fontWeight: FontWeight.bold)),
                                         ],
                                       ),
@@ -203,62 +139,75 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
                                       ),
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Total Pickups:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfDeliveredLoads![index]["totalPickups"]}",  style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 1.5.h,
-                                      ),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Total Drops:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text("${listOfDeliveredLoads![index]["totalDrops"]}",  style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 1.5.h,
-                                      ),
-                                      Card(
-                                        color: Colors.blueAccent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
-                                        ),
-                                        elevation: 15,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
-                                          child: Column(
+                                          Row(
                                             children: [
-                                              Row(mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Text("Delivered by:", style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16.sp, fontWeight: FontWeight.bold),),
-                                                  SizedBox(width: 2.w,),
-                                                  Container(
-                                                    constraints: BoxConstraints(maxWidth: 150),
-                                                    child: Text("${listOfDeliveredLoads![index]["driver_id"]}",
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 17.sp, fontWeight: FontWeight.bold),),
-                                                  )
-                                                ],),
-
+                                              Text("Total Pickups:",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 1.w,),
+                                              Text("${listOfDeliveredLoads![index]["totalPickups"]}",  style: TextStyle(
+                                                  color: AppColors.dashboardtextcolor,
+                                                  fontSize: 16.sp, fontWeight: FontWeight.bold)),
                                             ],
                                           ),
-                                        ),
+
+                                          Row(
+                                            children: [
+                                              Text("Total Drops:",  style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                              SizedBox(width: 1.w,),
+                                              Text("${listOfDeliveredLoads![index]["totalDrops"]}",  style: TextStyle(
+                                                  color: AppColors.dashboardtextcolor,
+                                                  fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                            ],
+                                          ),
+                                        ],
                                       ),
+                                      SizedBox(
+                                        height: 1.5.h,
+                                      ),
+
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("PAPER WORK:",  style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                        if(bolStatus == "0" || bolStatus == null)
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius: BorderRadius
+                                                    .circular(10)
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                  vertical: 1.h),
+                                              child: Text("PENDING",  style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                            ),
+                                          )
+                                        else
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius: BorderRadius
+                                                    .circular(10)
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                  vertical: 1.h),
+                                              child: Text("UPLOADED",  style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                      TextButton(onPressed: (){
+                                        getIdAndView(index);
+                                      }, child: Text("view Details.."))
 
                                     ],
                                   ),
@@ -286,7 +235,7 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
     var despatcherID = await LocalStorage().fetch("idKey");
     final AuthRepo authRepo = AuthRepo();
     try {
-      Response? response = await authRepo.dspAssignedLoad({
+      Response? response = await authRepo.dspDeliveredLoads({
         "Despatcher_id": despatcherID.toString()
       });
 
@@ -318,5 +267,23 @@ class _DspLoadDeliveredPreviewState extends State<DspLoadDeliveredPreview> {
       debugPrint("StackTrace: $str");
     }
 
+  }
+
+  void getIdAndView(int index) {
+    loadToBeViewedId = listOfDeliveredLoads![index]["id"];
+    loadBrokerName = listOfDeliveredLoads![index]["brokerName"];
+    loadBrokerNum = listOfDeliveredLoads![index]["brokerNumber"];
+    loadBrokerEmail = listOfDeliveredLoads![index]["brokerEmail"];
+    loadShipperEmail = listOfDeliveredLoads![index]["shipperEmail"];
+    loadShipperAddress = listOfDeliveredLoads![index]["shipperAddress"];
+    loadRateCon = listOfDeliveredLoads![index]["rateConfirmationID"];
+    loadAmount = listOfDeliveredLoads![index]["rate"];
+    loadWeight = listOfDeliveredLoads![index]["weight"];
+    loadBolStatus = listOfDeliveredLoads![index]["bolStatus"];
+    loadPickups = listOfDeliveredLoads![index]["totalPickups"];
+    loadDrops = listOfDeliveredLoads![index]["totalDrops"];
+    Routers.pushNamed(context, '/adminLoadsDeleveredDetails');
+
+    print("print load to be viewed as $loadToBeViewedId");
   }
 }

@@ -31,113 +31,137 @@ class _UsersFromFirebaseState extends State<UsersFromFirebase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Choose a user to copy the ID"),
+      appBar: AppBar(title: Text("Choose a user to copy the ID",
+        style: TextStyle(fontSize: 17.sp),),
       backgroundColor: Colors.indigo,),
       body: _body(),
     );
   }
 
   Widget _body() {
-
-    if(usersMap != null){
-      return Container();
-    }
-
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("Users").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> usersSnapshot){
-          usersMap = usersSnapshot.data?.docs;
+      stream: FirebaseFirestore.instance.collection("Locations").snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> usersSnapshot) {
+        if (usersSnapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(color: Colors.transparent,));
+        }
+        if (!usersSnapshot.hasData || usersSnapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No user found"));
+        }
 
-          if(usersSnapshot.hasData){
-              return ListView.builder(
-                    itemCount: usersSnapshot.data?.docs.length,
-                    itemBuilder: (context, index){
-                      var documentId  =  usersSnapshot.data?.docs[index];
-                      if(documentId?.id == currentUser?.uid){
-                        return const SizedBox.shrink();
-                      }
+        List<QueryDocumentSnapshot> usersMap = usersSnapshot.data!.docs;
 
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 2.w),
-                        child: InkWell(onTap: (){
-                          usersName = usersMap![index]["Name"];
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => UsersFromFbDetails(
-                              arguments: UsersDetails(
-                                  userAvatar:  usersMap![index]["photoUrl"],
-                                  userName: usersMap![index]["Name"],
-                                  userid: usersMap![index]["id"]
+        return ListView.builder(
+          itemCount: usersMap.length,
+          itemBuilder: (context, index) {
+            var document = usersMap[index];
 
-                              )
+            return StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("Users")
+                  .doc(document.id)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                if (!userSnapshot.hasData) {
+                  return CircularProgressIndicator(color: Colors.transparent,);
+                }
 
-                          ) ));
+                var userData = userSnapshot.data!.data() as Map<String, dynamic>?;
 
-                        },
-                          child: Card(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: StreamBuilder<QuerySnapshot>(
-                                        stream: FirebaseFirestore.instance.collection("Users").snapshots(),
-                                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                          dynamic userData = snapshot.data?.docs;
-                                          if(snapshot.connectionState == ConnectionState.waiting){
-                                            return CircularProgressIndicator(color: Colors.green,);
-                                          }else if(snapshot.hasError){
-                                            return CircleAvatar(child: Icon(Icons.person),radius: 60,);
-                                          }else {
-                                            return CircleAvatar(
-                                              backgroundColor: Colors.transparent,
-                                              backgroundImage: NetworkImage(
-                                                  userData[index]["photoUrl"] ?? ""),);
-                                          }
-                                        }
-                                    ),
-                                  ),
-                                 /* CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: NetworkImage(
-                                        usersMap![index]["photoUrl"]
-                                    ),
-                                  ),*/
-                                  SizedBox(width: 2.w,),
+                if (userData == null) {
+                  return SizedBox.shrink();
+                }
 
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(usersMap![index]["Name"],
-                                        style: TextStyle(fontWeight: FontWeight.bold,
-                                        fontSize: 17.sp),),
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        usersName = userData["Name"];
+                      });
 
-                                      SizedBox(height: 0.5.h,),
-                                      Text(usersMap![index]["id"],),
-                                    ],
-                                  )
+                      String userAvatar = userData["photoUrl"] ?? "";
+                      String userName = userData["Name"] ?? "";
+                      String userId = userData["id"] ?? "";
 
-                                ],
-
-                              ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UsersFromFbDetails(
+                            arguments: UsersDetails(
+                              userAvatar: userAvatar,
+                              userName: userName,
+                              userid: userId,
                             ),
-
                           ),
                         ),
                       );
-
-                    });
-
-          }
-          else {
-            return Center(
-              child: CircularProgressIndicator(color: Colors.green,),
+                      // Rest of the code...
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    userData["photoUrl"] ?? "",
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              /*child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection("Users").snapshots(),
+                                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    dynamic userData = snapshot.data?.docs;
+                                    if(snapshot.connectionState == ConnectionState.waiting){
+                                      return CircularProgressIndicator(color: Colors.green,);
+                                    }else if(snapshot.hasError){
+                                      return CircleAvatar(child: Icon(Icons.person),radius: 60,);
+                                    }else {
+                                      return CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: NetworkImage(
+                                            userData[index]["photoUrl"] ?? ""),);
+                                    }
+                                  }
+                              ),*/
+                            ),
+                            SizedBox(width: 2.w,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userData["Name"] ?? "",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.sp,
+                                  ),
+                                ),
+                                SizedBox(height: 0.5.h,),
+                                Text(userData["id"] ?? ""),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
-
-          }
-
-        });
-
+          },
+        );
+      },
+    );
   }
+
 
 
 }

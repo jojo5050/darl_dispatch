@@ -348,7 +348,6 @@ class _AssignLoadToDriverState extends State<AssignLoadToDriver>
         "subDispatcher": staffsID,
         "trailer": trailerNumber ?? "",
         "truck": truckNumber ?? "",
-
       });
 
       if (response != null && response.statusCode == 200) {

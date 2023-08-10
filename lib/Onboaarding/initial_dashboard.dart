@@ -27,7 +27,7 @@ class _InitialDashboardState extends State<InitialDashboard> {
             children: [
               SizedBox(height: 15.h,),
 
-              Text("WELLCOME", style: TextStyle(color: Colors.black,
+              Text("WELCOME", style: TextStyle(color: Colors.black,
                   fontWeight: FontWeight.bold, fontSize: 22.sp),),
               SizedBox(height: 2.h,),
 
@@ -38,7 +38,7 @@ class _InitialDashboardState extends State<InitialDashboard> {
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                child: Text("An Admin will assign a role to you shortly, "
+                child: Text("Admin will assign a role to you shortly, "
                     "then you can login again with your email and password.",
                   textAlign: TextAlign.center,
 

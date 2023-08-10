@@ -1,8 +1,10 @@
 import 'package:darl_dispatch/Utils/form_validators.dart';
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -83,28 +85,29 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
             SizedBox(height: 1.h,),
             Expanded(
               child: Container(
-                child: listOfPickups == null ? Center(child: CircularProgressIndicator(color: Colors.blue,)):
+                child: listOfPickups == null ? Center(child: LoaderFadingBlue()):
                 listOfPickups!.isEmpty ?
                 Center(
                   child: Column(
                     children: [
                       SizedBox(height: 40.h,),
-                      Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                      const Text(
-                        "No Registered Pickup Yet",
+                      Icon(Icons.question_mark, color: Colors.grey, size: 30.sp,),
+                      Text(
+                        "No Registered Pickup",
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            fontSize: 17.sp),
                       )
                     ],
                   ),
                 ) : ListView.builder(
                     itemCount: listOfPickups!.length,
                     itemBuilder: (context, index){
+                      var pickStatus = listOfPickups![index]["pickedStatus"];
 
                       return Container(
-                          height: 30.h,
+                          height: 39.h,
                           child: Card(
                             color: Colors.green,
                             elevation: 10,
@@ -129,9 +132,11 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
                                                     color: Colors.black,
                                                     fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                                 SizedBox(width: 4.w,),
-                                                Text("${listOfPickups![index]["state"]}",  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                Container(constraints: BoxConstraints(maxWidth: 160),
+                                                  child: Text("${listOfPickups![index]["state"]}",  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                ),
                                               ],
 
                                             ),
@@ -178,31 +183,6 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
                                                         ),
                                                     ),
                                                   ),
-                                                  PopupMenuItem(
-                                                    value: 2,
-                                                    child: Container(
-                                                        child: Row(
-                                                          children: [
-                                                            const Icon(
-                                                              Icons.delete,
-                                                              color: Colors.red,
-                                                              size: 20,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                            Text(
-                                                              "Delete",
-                                                              style: TextStyle(
-                                                                  color: Colors.white,
-                                                                  fontSize: 15.sp,
-                                                                  fontWeight: FontWeight.bold),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                    ),
-                                                  ),
-
                                                 ]),
                                           ],
                                         ),
@@ -216,10 +196,12 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
                                             Text("Pickup City:",  style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            SizedBox(width: 4.w,),
-                                            Text("${listOfPickups![index]["city"]}",  style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+
+                                            Container(constraints: BoxConstraints(maxWidth: 160),
+                                              child: Text("${listOfPickups![index]["city"]}",  style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            ),
                                           ],
 
                                         ),
@@ -271,10 +253,51 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
                                             Text("Address",  style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            SizedBox(width: 4.w,),
-                                            Text("${listOfPickups![index]["address"]}",  style: TextStyle(
-                                                color: Colors.white,
+                                            Container(constraints: BoxConstraints(maxWidth: 220),
+                                              child: Text("${listOfPickups![index]["address"]}",
+                                                  overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ],
+
+                                        ),
+                                        SizedBox(height: 2.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("PICK STATUS:",  style: TextStyle(
+                                                color: Colors.black,
                                                 fontSize: 17.sp, fontWeight: FontWeight.bold)),
+
+                                            if(pickStatus == "0" || pickStatus == null)
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius: BorderRadius
+                                                        .circular(10)
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                      vertical: 1.h),
+                                                  child: Text("PENDING", style: TextStyle(color: Colors.red,
+                                                      fontWeight: FontWeight.bold),),
+                                                ),
+                                              )
+                                            else
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius
+                                                        .circular(10)
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                      vertical: 1.h),
+                                                  child: Text("PICKED", style: TextStyle(color: Colors.black,
+                                                      fontWeight: FontWeight.bold),),
+                                                ),
+                                              )
                                           ],
 
                                         ),
@@ -366,12 +389,13 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
 
   }
 
-  void showPickModal(int index) {
-    showModalBottomSheet(
+  Future<void> showPickModal(int index) async {
+     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
         pickUpId = listOfPickups![index]["id"];
+        var pickedStatus = listOfPickups![index]["pickedStatus"];
 
         print("printttttttttttttt pickupid assssssssss $pickUpId");
 
@@ -432,8 +456,22 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
                               borderRadius: BorderRadius.circular(15),
                               side: BorderSide.none)),
                       onPressed: () {
+                        if(pickedStatus == "2"){
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
+                              backgroundColor: Colors.black,
+                              duration: Duration(seconds: 3),
+                              content: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                                child: Text("Sorry!! This load has already been Picked"),
+                              )));
+                          return;
+                        }
+
                         startLoader();
                         pickLoad();
+                        Navigator.pop(context);
                         },
                       child: Padding(
                         padding:
@@ -468,7 +506,7 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
         "pickedup_Date": formatedDate.toString(),
         "pickedStatus": "2",
         "totalLoadPicked": totalLoadPicked.toString(),
-        "comment": commentController.text,
+        "comment": commentController.text ?? "",
         "truck": truckNum ?? "",
         "trailer": pickTrailerNum.toString() ?? "",
         "tractor": pickTractorNum.toString() ?? ""
@@ -551,7 +589,11 @@ class _PickPickUpState extends State<PickPickUp> with FormValidators {
             child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context, '/loadsAssignedPreview');
+                  if(userRole == "Driver"){
+                    Navigator.pushNamed(context, '/drAssignedPreviewFromSuccess');
+                  }else{
+                    Navigator.pushNamed(context, '/adminAssignedPreviewFromSuccess');
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,

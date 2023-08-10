@@ -12,6 +12,7 @@ import '../../AuthManagers/authRepo.dart';
 import '../../Models/global_variables.dart';
 import '../../Utils/localstorage.dart';
 import '../../Utils/routers.dart';
+import '../Utils/loaderFadingBlue.dart';
 
 class DespatcherHomePage extends StatefulWidget {
   const DespatcherHomePage({Key? key}) : super(key: key);
@@ -33,12 +34,17 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
 
   bool _hasInternet = true;
 
+  List<Map<String, dynamic>>? listOfDeliveredLoads;
+
+  var errmsg;
+
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+   // WidgetsBinding.instance.addObserver(this);
     checkInternetConnection();
     getUserDetails();
     getAllStaffs();
+    getDelevered();
     getAllDrivers();
     getTrucks();
     getTrailers();
@@ -76,9 +82,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
           body: _hasInternet ?
           Stack(children: [
             Container(
@@ -94,8 +98,8 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                   ),
 
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 3.w, vertical: 2.h
+                    padding: EdgeInsets.only(
+                      left: 3.w, right: 5, top: 3.h
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -103,7 +107,8 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                         Column(
                           children: [
                             Container(
-                                child: profilePic == null ? CircularProgressIndicator():
+                                child: profilePic == null ?
+                                LoaderFadingBlue():
                                 CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.transparent,
@@ -111,7 +116,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 )),
                             SizedBox(height: 0.5.h,),
                             Text("${userName ?? ""} ", style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15.sp),),
+                                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14.sp),),
                           ],
                         )
                       ],
@@ -151,7 +156,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Employees",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -160,14 +165,15 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                                   child:
-                                  listOfStaffs == null ? CircularProgressIndicator(color: Colors.green,):
+                                  listOfStaffs == null ?
+                                  LoaderFadingBlue():
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${listOfStaffs!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       const Icon(
                                         Icons.group,
@@ -205,24 +211,31 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Loads Delivered",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
                                   height: 5.h,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w),
                                   child:
+                                  listOfDeliveredLoads == null
+                                      ? LoaderFadingBlue()
+                                      :
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
                                     children: [
                                       Text(
-                                        "0",
+                                        "${listOfDeliveredLoads!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white,
+                                            fontSize: 18.sp),
                                       ),
-                                      Icon(Icons.check_circle, color: Colors.indigo, size: 25.sp,)
+                                      Icon(Icons.check_circle,
+                                        color: Colors.indigo, size: 25.sp,)
                                     ],
                                   ),
                                 )
@@ -254,7 +267,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Registered Loads",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -263,14 +276,14 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                                   child:
-                                  listOfLoads == null ? CircularProgressIndicator(color: Colors.green,):
+                                  listOfLoads == null ? LoaderFadingBlue():
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${listOfLoads!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       Icon(Icons.done_all, color: Colors.indigo, size: 25.sp,)
                                     ],
@@ -306,7 +319,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Drivers",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -315,14 +328,14 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                                   child:
-                                  listOfDrivers == null ? CircularProgressIndicator(color: Colors.green,):
+                                  listOfDrivers == null ? LoaderFadingBlue():
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${listOfDrivers!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       Icon(Icons.directions_car, color: Colors.indigo, size: 25.sp,)
                                     ],
@@ -359,7 +372,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Truck",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -368,14 +381,14 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                                   child:
-                                  listOfTrucks == null ? CircularProgressIndicator(color: Colors.green,):
+                                  listOfTrucks == null ? LoaderFadingBlue():
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${listOfTrucks!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       Icon(Icons.local_shipping, color: Colors.indigo, size: 25.sp,)
                                     ],
@@ -410,7 +423,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Trailers",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -419,14 +432,14 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                                   child:
-                                  listOfTrailers == null ? CircularProgressIndicator(color: Colors.green,):
+                                  listOfTrailers == null ? LoaderFadingBlue():
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${listOfTrailers!.length ?? ""}",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       Icon(Icons.train, color: Colors.indigo, size: 25.sp,)
                                     ],
@@ -462,7 +475,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       child: Text(
                                         "Total CashOut",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                                       ),
                                     )),
                                 SizedBox(
@@ -476,7 +489,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                       Text(
                                         "\$ 0",
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.sp),
+                                            color: Colors.white, fontSize: 18.sp),
                                       ),
                                       Icon(Icons.money, color: Colors.indigo, size: 25.sp,)
                                     ],
@@ -546,30 +559,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                                 )
                             ),
                           ),
-                          InkWell(onTap: (){
-                            Routers.pushNamed(context,  '/driverManagementScreen');
 
-                          },
-                            child: Card(
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-
-                                child: Container(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: 3.h,),
-                                      const Center(
-                                          child: Icon(Icons.directions_car, color: Colors.black, size: 40,)),
-
-                                      Text("Drivers", style: TextStyle(color: Colors.black, fontSize: 14.sp),)
-
-                                    ],
-                                  ),
-                                )
-                            ),
-                          ),
                           InkWell(onTap: (){
                             Routers.pushNamed(context, '/loadsAssignedPreview');
 
@@ -594,7 +584,8 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                             ),
                           ),
                           InkWell(onTap: (){
-                            Routers.pushNamed(context, '/dsp_delivered_preview');
+
+                            Routers.pushNamed(context, '/dspDeliveredLoadsManager');
 
                           },
                             child: Card(
@@ -617,7 +608,10 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                             ),
                           ),
                           InkWell(onTap: (){
-
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(
+                              content: Text("work in progress, try again later"),
+                              duration: Duration(seconds: 2),));
                           },
                             child: Card(
                                 elevation: 10,
@@ -639,7 +633,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
                             ),
                           ),
                           InkWell(onTap: (){
-                            Routers.pushNamed(context, '/device_tracking_page');
+                            Routers.pushNamed(context, '/trackingManagerPage');
                           },
                             child: Card(
                                 elevation: 10,
@@ -673,8 +667,7 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
           ]
           ): buildNoInternetPopup()
 
-      ),
-    );
+      );
   }
 
   void getUserDetails() async {
@@ -958,29 +951,42 @@ class _DespatcherHomePageState extends State<DespatcherHomePage> with WidgetsBin
     });
   }
 
-  Future<bool> willPopControll() async {
-    return (await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        //  title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit the App'),
-        actions: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              TextButton(
-                onPressed: () => exitApp(),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    )) ??
-        false;
+  void getDelevered() async {
+    var dispatcherID = await LocalStorage().fetch('idKey');
+    final AuthRepo authRepo = AuthRepo();
+    try {
+      Response? response = await authRepo.dspDeliveredLoads({
+        "Despatcher_id": dispatcherID
+      });
+      print("dsp id assssssssssss $dispatcherID");
+
+      if (response != null && response.statusCode == 200 &&
+          response.data["status"] == "success") {
+
+        List regLoads = response.data["data"]["docs"];
+        List<Map<String, dynamic>> data = [];
+
+        if (regLoads.length > 0) {
+          for (int i = 0; i < regLoads.length; i++) {
+            Map<String, dynamic> deliveredLoadsList = regLoads[i];
+            data.add(deliveredLoadsList);
+          }
+        }
+        setState(() {
+          listOfDeliveredLoads = data;
+        });
+
+      } else {
+        // stopLoader();
+        setState(() {
+          errmsg = response!.data["message"];
+        });
+
+      }
+    } catch (e, str) {
+      debugPrint("Error: $e");
+      debugPrint("StackTrace: $str");
+    }
+
   }
 }

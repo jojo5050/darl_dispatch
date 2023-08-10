@@ -55,9 +55,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
           body: SafeArea(
             child: Stack(
               children: <Widget>[
@@ -101,8 +99,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
                 )
               ],
             ),
-          )),
-    );
+          ));
   }
 
   Widget builSearchBar() {
@@ -170,7 +167,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
       QueryDocumentSnapshot<Object?>? document) {
     if (document != null) {
       UserChatModel userChatModel = UserChatModel.fromDocument(document);
-
+     // var userStatus  = userChatModel.status;
       if (userChatModel.id == currentUsrId) {
         return SizedBox.shrink();
       } else {
@@ -199,9 +196,20 @@ class _ChatUsersListState extends State<ChatUsersList> {
                       backgroundImage: NetworkImage(
                           userChatModel.photoUrl ?? ""),),
                     SizedBox(width: 3.w,),
-                    Text("${userChatModel.name}", style: TextStyle(
-                        color: Colors.black87, fontSize: 18.sp, fontWeight: FontWeight.bold),)
-                  ],
+                        Text("${userChatModel.name}", style: TextStyle(
+                            color: Colors.black87, fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                        /*SizedBox(height: 0.5.h,),
+                        if(userStatus == "Offline")
+                        Text("Offline", style: TextStyle(
+                            color: Colors.grey, fontSize: 16.sp, fontWeight: FontWeight.bold)
+                        ),
+                        if(userStatus == "Online")
+                      Text("Online", style: TextStyle(
+                       color: Colors.green, fontSize: 16.sp, )
+                          ),*/
+
+
+                          ],
                 )
               ),),
             ),
@@ -213,35 +221,4 @@ class _ChatUsersListState extends State<ChatUsersList> {
     }
   }
 
-  exitApp() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-    });
-  }
-
-  Future<bool> willPopControll() async {
-    return (await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        //  title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit the App'),
-        actions: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              TextButton(
-                onPressed: () => exitApp(),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    )) ??
-        false;
-  }
 }

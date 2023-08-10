@@ -19,7 +19,7 @@ class _DriversManagementScreenState extends State<DriversManagementScreen> {
         appBar: AppBar(
           title: Text("Drivers",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp)),
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.sp)),
           backgroundColor: Colors.indigo,
         ),
         body: Stack(children: <Widget>[
@@ -30,7 +30,7 @@ class _DriversManagementScreenState extends State<DriversManagementScreen> {
                       fit: BoxFit.cover))),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
               child: Column(
                 children: [
 
@@ -61,7 +61,7 @@ class _DriversManagementScreenState extends State<DriversManagementScreen> {
                                         "All Drivers",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(
@@ -113,7 +113,7 @@ class _DriversManagementScreenState extends State<DriversManagementScreen> {
                                         "Active Drivers",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(
@@ -161,7 +161,7 @@ class _DriversManagementScreenState extends State<DriversManagementScreen> {
                                         "Non Active Drivers",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(

@@ -29,24 +29,24 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        title: const Text("Registered Vehicles", style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold)),
+        title: Text("Registered Vehicles", style: TextStyle(color: Colors.white,
+            fontWeight: FontWeight.bold, fontSize: 17.sp)),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
         child: Container(
             child: listOfVehicles == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
             listOfVehicles!.isEmpty ?
             Center(
               child: Column(
                 children: [
-                  Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
+                  Icon(Icons.question_mark, color: Colors.grey, size: 35.sp,),
                   const Text(
                     "No Registered Vehicles Yet",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 17),
                   )
                 ],
               ),
@@ -55,12 +55,12 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                 itemCount: listOfVehicles!.length,
                 itemBuilder: (context, index){
                   return  Container(
-                    height: 20.h,
+                    height: 19.h,
                     child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                       ),
-                      elevation: 10,
+                      elevation: 5,
                       child: Container(
                         decoration: BoxDecoration(),
                         child: Padding(
@@ -71,10 +71,8 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                               SizedBox(height: 1.h,),
                               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
                                       Text(
-                                        "NUMBER PLATE:",
+                                        "Number Plate:",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
                                             fontSize: 17.sp,
@@ -85,12 +83,10 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                                         "${listOfVehicles![index][ "plateNumber"]}",
                                         style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 18.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
 
-                                    ],
-                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -99,7 +95,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "VEHICLE ID:",
+                                    "Vhicle ID:",
                                     style: TextStyle(
                                         color: AppColors.dashboardtextcolor,
                                         fontSize: 17.sp,
@@ -111,7 +107,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -120,7 +116,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "VEHICLE TYPE:",
+                                    "Vehicle Type:",
                                     style: TextStyle(
                                         color: AppColors.dashboardtextcolor,
                                         fontSize: 17.sp,
@@ -132,7 +128,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -141,7 +137,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "VIN:",
+                                    "Vin:",
                                     style: TextStyle(
                                         color: AppColors.dashboardtextcolor,
                                         fontSize: 17.sp,
@@ -153,7 +149,7 @@ class _DrAvailableVehiclesState extends State<DrAvailableVehicles> {
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold),
+                                        ),
                                   ),
                                 ],
                               ),

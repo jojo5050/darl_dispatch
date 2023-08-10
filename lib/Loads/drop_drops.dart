@@ -1,8 +1,10 @@
 import 'package:darl_dispatch/Utils/form_validators.dart';
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -21,7 +23,6 @@ class DropDrops extends StatefulWidget {
 
 class _DropDropsState extends State<DropDrops> with FormValidators {
 
-  var errMsg;
   List<Map<String, dynamic>>? listOfDrops;
 
   var dropID;
@@ -94,211 +95,242 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
           SizedBox(height: 1.h,),
           Expanded(
             child: Container(
-              child: listOfDrops == null ? Center(child: CircularProgressIndicator(color: Colors.blue,)):
+              child: listOfDrops == null ? Center(child: LoaderFadingBlue()):
               listOfDrops!.isEmpty ?
               Center(
                 child: Column(
                   children: [
                     SizedBox(height: 40.h,),
                     Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                    const Text(
+                    Text(
                       "No Registered Drops Yet",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                          fontSize: 17.sp),
                     )
                   ],
                 ),
               ) : ListView.builder(
                   itemCount: listOfDrops!.length,
                   itemBuilder: (context, index){
+                    var dropStatus = listOfDrops![index]["status"];
 
-                    return Container(
-                        height: 30.h,
-                        child: Card(
-                          color: Colors.grey,
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 3.w,),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 1.h,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Text("Drop State:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${listOfDrops![index]["state"]}",  style: TextStyle(
+                    return InkWell(onTap: (){
+                      showDropModal(index);
+                    },
+                      child: Container(
+                          height: 40.h,
+                          child: Card(
+                            color: Colors.grey,
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 3.w,),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 1.h,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text("Drop State:",  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                SizedBox(width: 4.w,),
+                                                Container(
+                                                  constraints: BoxConstraints(maxWidth: 160),
+                                                  child: Text("${listOfDrops![index]["state"]}",
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                                ),
+                                              ],
+
+                                            ),
+                                            PopupMenuButton(
+                                                color: Colors.black,
+                                                elevation: 20,
+                                                shape: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(15)),
+                                                icon: const Center(
+                                                  child: Icon(
+                                                    Icons.more_vert,
+                                                    color: Colors.black,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                                onSelected: (value){
+                                                  switch (value) {
+                                                    case 1: showDropModal(index);
+                                                    break;
+                                                  }
+                                                },
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Container(
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(
+                                                            Icons.remove_circle,
+                                                            color: Colors.green,
+                                                            size: 20,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          Text(
+                                                            "DROP",
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontSize: 16.sp,
+                                                                fontWeight: FontWeight.bold),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ],
+                                        ),
+
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Drop City:",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            SizedBox(width: 4.w,),
+                                            Container(constraints: BoxConstraints(maxWidth: 250),
+                                              child: Text("${listOfDrops![index]["city"]}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
+                                            ),
+                                          ],
 
-                                          ),
-                                          PopupMenuButton(
-                                              color: Colors.black,
-                                              elevation: 20,
-                                              shape: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(15)),
-                                              icon: const Center(
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.black,
-                                                  size: 30,
+                                        ),
+
+                                        SizedBox(height: 1.5.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Drop date:",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+
+                                            Text("${listOfDrops![index]["date"]}",  style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ],
+
+                                        ),
+
+                                        SizedBox(height: 1.5.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Drop Time:",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            SizedBox(width: 4.w,),
+                                            Text("${listOfDrops![index]["time"]}",  style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ],
+
+                                        ),
+                                        SizedBox(height: 1.5.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Drop ZipCode:",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            SizedBox(width: 4.w,),
+                                            Text("${listOfDrops![index]["stateZipCode"]}",  style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                          ],
+
+                                        ),
+
+                                        SizedBox(height: 1.5.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Address",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            Container(constraints: BoxConstraints(maxWidth: 220),
+                                              child: Text("${listOfDrops![index]["address"]}",
+                                                  overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ],
+
+                                        ),
+                                        SizedBox(height: 3.h,),
+                                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("DROP STATUS:",  style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+
+                                            if(dropStatus == "0" || dropStatus == null)
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius: BorderRadius
+                                                        .circular(10)
                                                 ),
-                                              ),
-                                              onSelected: (value){
-                                                switch (value) {
-                                                  case 1: showDropModal(index);
-                                                  break;
-                                                }
-                                              },
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: Container(
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.remove_circle,
-                                                          color: Colors.green,
-                                                          size: 20,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Text(
-                                                          "DROP",
-                                                          style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 16.sp,
-                                                              fontWeight: FontWeight.bold),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                      vertical: 1.h),
+                                                  child: Text("PENDING", style: TextStyle(color: Colors.red,
+                                                      fontWeight: FontWeight.bold),),
                                                 ),
-                                                PopupMenuItem(
-                                                  value: 2,
-                                                  child: Container(
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                          size: 20,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Text(
-                                                          "Delete",
-                                                          style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 15.sp,
-                                                              fontWeight: FontWeight.bold),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                              )
+                                            else
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius
+                                                        .circular(10)
                                                 ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 3.w,
+                                                      vertical: 1.h),
+                                                  child: Text("DROPPED", style: TextStyle(color: Colors.black,
+                                                      fontWeight: FontWeight.bold),),
+                                                ),
+                                              )
 
-                                              ]),
-                                        ],
-                                      ),
+                                          ],
 
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
+                                        ),
 
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Drop City:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["city"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
-
-                                      ),
-
-                                      SizedBox(height: 1.5.h,),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Drop date:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["date"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
-
-                                      ),
-
-                                      SizedBox(height: 1.5.h,),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Drop Time:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["time"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
-
-                                      ),
-                                      SizedBox(height: 1.5.h,),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Drop ZipCode:",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["stateZipCode"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
-
-                                      ),
-
-                                      SizedBox(height: 1.5.h,),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Address",  style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 4.w,),
-                                          Text("${listOfDrops![index]["address"]}",  style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                        ],
-
-                                      ),
-
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
 
-                      );
+                        ),
+                    );
 
 
                   }),
@@ -318,20 +350,6 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
         duration: Duration(seconds: 3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         content: Text("Vehicle Deleted Successfuly",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-    );
-
-  }
-
-  void showErr() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.black,
-        duration: Duration(seconds: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        content: Text("$errMsg",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
@@ -384,6 +402,7 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
       isScrollControlled: true,
       builder: (BuildContext context) {
         dropID = listOfDrops![index]["id"];
+        var dropStatus = listOfDrops![index]["status"];
 
         print("printttttttttttttt drop id assssssssss $dropID");
 
@@ -595,8 +614,23 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
                               borderRadius: BorderRadius.circular(15),
                               side: BorderSide.none)),
                       onPressed: () {
-                        startLoader();
-                        dropLoad();
+                        if(dropStatus == "3"){
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
+                              backgroundColor: Colors.black,
+                              duration: Duration(seconds: 3),
+                              content: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
+                                child: Text("Sorry!! This load has already been dropped"),
+                              )));
+                          return;
+                        }else{
+                          startLoader();
+                          dropLoad();
+                          Navigator.pop(context);
+
+                        }
                       },
                       child: Padding(
                         padding:
@@ -626,7 +660,7 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
     var logedUserID = await LocalStorage().fetch("idKey");
 
     try {
-      Response? response = await authRepo.pickLoad({
+      Response? response = await authRepo.dropLoad({
         "dropID": dropID,
         "status": "3",
         "load_id": loadToBeDropedId.toString(),
@@ -634,9 +668,9 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
         "dropped_Date": formatedDate.toString(),
         "droppedBy": logedUserID,
         "amount_Spent": amountController.text ?? "",
-        "expenses_Type": expensesType.toString(),
+        "expenses_Type": expensesType.toString() ?? "",
         "expenses_Description": expensesDescControl.text ?? "",
-        "layover": layOverValue.toString(),
+        "layover": layOverValue.toString() ?? "",
         "layOverAmount": layoverAmountControl.text ?? "",
         "comment": commentControl.text ?? "",
         "truck": truckNum ?? "",
@@ -645,14 +679,15 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
       });
 
       if (response != null && response.statusCode == 200
-          && response.data["Status"] == 200) {
+          && response.data["status"] == "success") {
         stopLoader();
         showPopUp();
-      } else {
+      }
+      else {
         setState(() {
           errorMssg = response?.data["message"];
         });
-
+        stopLoader();
         desplayErromssge();
       }
     } catch (e, str) {
@@ -660,9 +695,6 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
       debugPrint("StackTrace: $str");
     }
 
-    setState(() {
-      // loading = false;
-    });
 
   }
 
@@ -685,16 +717,16 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
               child: Icon(
                 Icons.check_circle_outline,
                 color: Colors.green,
-                size: 40.sp,
+                size: 35.sp,
               )),
           SizedBox(
             height: 15,
           ),
-          const Center(
+           Center(
             child: Text(
               " Success!",
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18.sp,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
@@ -702,27 +734,30 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
           SizedBox(
             height: 25,
           ),
-          const Center(
+           Center(
             child: Text(
               " Load Was Dropped ",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: TextStyle(fontSize: 16.sp, color: Colors.white),
             ),
           ),
           SizedBox(
             height: 5,
           ),
-          const Center(
+           Center(
             child: Text(
               "Successfully",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: TextStyle(fontSize: 16.sp, color: Colors.white),
             ),
           ),
           Center(
             child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context, '/loadsAssignedPreview');
-
+                  if(userRole == "Driver"){
+                    Navigator.pushNamed(context, '/drAssignedPreviewFromSuccess');
+                  }else{
+                    Navigator.pushNamed(context, '/adminAssignedPreviewFromSuccess');
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -755,7 +790,7 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
         backgroundColor: Colors.black,
         duration: Duration(seconds: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        content: Text("$errorMssg",
+        content: Text("gdgdggddgdggdgdgdgdgdgdgg",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
@@ -866,6 +901,83 @@ class _DropDropsState extends State<DropDrops> with FormValidators {
     }
 
 
+  }
+
+  void showFailedPopUp() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30))),
+        backgroundColor: Colors.black87,
+        actions: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 40.sp,
+              )),
+          SizedBox(
+            height: 15,
+          ),
+          const Center(
+            child: Text(
+              " Oops!!!",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          const Center(
+            child: Text(
+              " Error occured ",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          const Center(
+            child: Text(
+              "Try Again",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+          ),
+          Center(
+            child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 40,
+                  width: 180,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.green),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
   }
 
 }

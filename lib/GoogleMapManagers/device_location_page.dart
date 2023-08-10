@@ -40,10 +40,12 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
 
   LatLng? currentLocation;
 
+  BitmapDescriptor? _largerMarkerIcon;
 
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
@@ -71,9 +73,15 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                              snapshot.data!.docs.singleWhere(
                       (element) => element.id == widget.trackingId)["longitude"]),
                       markerId: MarkerId("markerID"),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueMagenta
-                  )),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueRed
+                      )
+
+
+                    /*_largerMarkerIcon
+                        ?? BitmapDescriptor
+                            .defaultMarkerWithHue(BitmapDescriptor.hueMagenta),*/
+                  ),
                 },
                 initialCameraPosition: CameraPosition(
               target: LatLng( snapshot.data!.docs.singleWhere(
@@ -96,7 +104,6 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
   }
 
   Future<void> myMap(AsyncSnapshot<QuerySnapshot<Object?>> snapshot) async {
-
     await _googleMapController.animateCamera(
         CameraUpdate.newCameraPosition(CameraPosition(
             target:  LatLng( snapshot.data!.docs.singleWhere(
@@ -138,4 +145,20 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
        addPolyLine(polylineCoordinates);
   }
 
+ /* Future<void> _createCustomMarkerIcon() async {
+    final ImageConfiguration imageConfiguration =
+    createLocalImageConfiguration(context);
+    BitmapDescriptor.fromAssetImage(
+      imageConfiguration,
+      'assets/images/lcimage.png',
+    ).then((BitmapDescriptor bitmapDescriptor) {
+      setState(() {
+        _largerMarkerIcon = bitmapDescriptor;
+      });
+    }).catchError((dynamic error) {
+      print('Failed to load larger marker icon: $error');
+    });
+  }*/
+
 }
+

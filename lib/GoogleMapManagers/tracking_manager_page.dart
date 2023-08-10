@@ -34,7 +34,7 @@ class _TrackingManagerPageState extends State<TrackingManagerPage> {
               style:
               TextStyle(color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18.sp)),
+                  fontSize: 17.sp)),
           backgroundColor: Colors.indigo,
         ),
         body: Stack(children: <Widget>[
@@ -45,7 +45,7 @@ class _TrackingManagerPageState extends State<TrackingManagerPage> {
                       fit: BoxFit.cover))),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
               child: Column(
                 children: [
 
@@ -77,7 +77,7 @@ class _TrackingManagerPageState extends State<TrackingManagerPage> {
                                       "Get User Tracking ID",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -133,7 +133,7 @@ class _TrackingManagerPageState extends State<TrackingManagerPage> {
                                       "Enter Tracking ID",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(

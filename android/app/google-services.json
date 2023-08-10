@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "276224518042-rkcpovvlrrh43i107pa033vjainpd27h.apps.googleusercontent.com",
+          "client_id": "276224518042-u7g027ojvvtkgomq92pal6kntv5s8237.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.darlproject.darl_dispatch",
+            "certificate_hash": "bc95392415f513612bfdc07b8f4bc54475722fe2"
+          }
+        },
+        {
+          "client_id": "276224518042-onltifsg9spnsjcaq6pd80q5e7itbe8h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "276224518042-rkcpovvlrrh43i107pa033vjainpd27h.apps.googleusercontent.com",
+              "client_id": "276224518042-onltifsg9spnsjcaq6pd80q5e7itbe8h.apps.googleusercontent.com",
               "client_type": 3
             },
             {

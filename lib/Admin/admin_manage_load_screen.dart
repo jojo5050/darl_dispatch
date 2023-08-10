@@ -73,7 +73,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                                       "Register New Load",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -129,7 +129,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                                       "Newly Registered Loads",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -186,7 +186,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                                       "Loads with Pick/Drops",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -242,7 +242,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                                       "Loads Assigned",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -276,7 +276,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                     height: 10.h,
                     child: InkWell(
                       onTap: () {
-                        Routers.pushNamed(context, '/deliveredLoadsPreview');
+                        Routers.pushNamed(context, '/adminLoadDeliveredPreview');
                       },
                       child: Card(
                         elevation: 10,
@@ -299,7 +299,7 @@ class _AdminManageLoadState extends State<AdminManageLoad> {
                                       "Load Delivered",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(

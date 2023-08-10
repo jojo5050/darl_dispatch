@@ -349,6 +349,17 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                           SizedBox(height: 1.h,),
                           TextFormField(
                             keyboardType: TextInputType.multiline,
+                            style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                            decoration: const InputDecoration(
+
+                                hintText: "Pickup Load Name",
+                                hintStyle: TextStyle(color: Colors.grey)),
+                            validator: validateAddress,
+                            controller: pickModel1.pickupLoadNameController1,
+                          ),
+                          SizedBox(height: 1.h,),
+                          TextFormField(
+                            keyboardType: TextInputType.multiline,
                             maxLines: 2,
                             style: TextStyle(color: Colors.black, fontSize: 18.sp),
                             decoration: const InputDecoration(
@@ -560,6 +571,17 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                                   SizedBox(height: 1.h,),
                                   TextFormField(
                                     keyboardType: TextInputType.multiline,
+                                    style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                                    decoration: const InputDecoration(
+
+                                        hintText: "Pickup Load Name",
+                                        hintStyle: TextStyle(color: Colors.grey)),
+                                    validator: validateAddress,
+                                    controller: pickModel2.pickupLoadNameController2,
+                                  ),
+                                  SizedBox(height: 1.h,),
+                                  TextFormField(
+                                    keyboardType: TextInputType.multiline,
                                     maxLines: 2,
                                     style: TextStyle(color: Colors.black, fontSize: 18.sp),
                                     decoration: const InputDecoration(
@@ -764,6 +786,16 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                                           SizedBox(height: 2.h,),
                                           TextFormField(
                                             keyboardType: TextInputType.multiline,
+                                            style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                                            decoration: const InputDecoration(
+
+                                                hintText: "Pickup Load Name",
+                                                hintStyle: TextStyle(color: Colors.grey)),
+                                            validator: validateAddress,
+                                            controller: pickModel3.pickupLoadNameController3,
+                                          ),
+                                          TextFormField(
+                                            keyboardType: TextInputType.multiline,
                                             maxLines: 2,
                                             style: TextStyle(color: Colors.black, fontSize: 18.sp),
                                             decoration: const InputDecoration(
@@ -961,6 +993,17 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                                 hintText: "Time",
                                 hintStyle: TextStyle(color: Colors.black)),
                             readOnly: true,
+                          ),
+                          SizedBox(height: 1.h,),
+                          TextFormField(
+                            keyboardType: TextInputType.multiline,
+                            style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                            decoration: const InputDecoration(
+
+                                hintText: "Drop Load Name",
+                                hintStyle: TextStyle(color: Colors.grey)),
+                            validator: validateAddress,
+                            controller: dropModel1.dropLoadNameController1,
                           ),
                           SizedBox(height: 1.h,),
                           TextFormField(
@@ -1171,6 +1214,18 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                                     readOnly: true,
                                   ),
                                   SizedBox(height: 1.h,),
+
+                                  TextFormField(
+                                    keyboardType: TextInputType.multiline,
+                                    style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                                    decoration: const InputDecoration(
+
+                                        hintText: "Drop Load Name",
+                                        hintStyle: TextStyle(color: Colors.grey)),
+                                    validator: validateAddress,
+                                    controller: dropModel2.dropLoadNameController2,
+                                  ),
+                                  SizedBox(height: 1.h,),
                                   TextFormField(
                                     keyboardType: TextInputType.multiline,
                                     maxLines: 2,
@@ -1379,6 +1434,18 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
                                             readOnly: true,
                                           ),
                                           SizedBox(height: 1.h,),
+
+                                          TextFormField(
+                                            keyboardType: TextInputType.multiline,
+                                            style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                                            decoration: const InputDecoration(
+
+                                                hintText: "Drop Load Name",
+                                                hintStyle: TextStyle(color: Colors.grey)),
+                                            validator: validateAddress,
+                                            controller: dropModel3.dropLoadNameController3,
+                                          ),
+                                          SizedBox(height: 1.h,),
                                           TextFormField(
                                             keyboardType: TextInputType.multiline,
                                             maxLines: 2,
@@ -1543,9 +1610,9 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "state" : pickStateValue1.toString(),
         "totalPickups": "0",
         "stateZipCode" : pickModel1.pickZipcoadController1.text,
-        "name" : mLoadDec.toString(),
         "load_id": mLoadID.toString(),
-        "address": pickModel1.pickupAddressInputController1.text
+        "address": pickModel1.pickupAddressInputController1.text,
+        "name": pickModel1.pickupLoadNameController1.text
       });
 
       if(response != null && response.statusCode == 200 && response.data["status"] == 200 ){
@@ -1576,7 +1643,7 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "city" : pickCityValue2.toString(),
         "state" : pickStateValue2.toString(),
         "stateZipCode" : pickModel2.pickZipcoadController2.text,
-        "name" : mLoadDec.toString(),
+        "name" : pickModel2.pickupLoadNameController2.text,
         "load_id": mLoadID.toString(),
         "totalPickups": "0",
         "address": pickModel2.pickupAddressInputController2.text
@@ -1611,7 +1678,7 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "city" : pickCityValue3.toString(),
         "state" : pickStateValue3.toString(),
         "stateZipCode" : pickModel3.pickZipcoadController3.text,
-        "name" : mLoadDec.toString(),
+        "name" : pickModel3.pickupLoadNameController3.text,
         "load_id": mLoadID.toString(),
         "totalPickups": "0",
         "address": pickModel3.pickupAddressInputController3.text
@@ -1646,7 +1713,7 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "city" : dropCityValue1.toString(),
         "state" : dropStateValue1.toString(),
         "stateZipCode" : dropModel1.dropZipcoadController1.text,
-        "name" : mLoadDec.toString(),
+        "name" : dropModel1.dropLoadNameController1.text,
         "load_id": mLoadID.toString(),
         "totalPickups": "0",
         "address": dropModel1.dropAddressInputController1.text
@@ -1681,7 +1748,7 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "city" : dropCityValue2.toString(),
         "state" : dropStateValue2.toString(),
         "stateZipCode" : dropModel2.dropZipcoadController2.text,
-        "name" : mLoadDec.toString(),
+        "name" : dropModel2.dropLoadNameController2.text,
         "load_id": mLoadID.toString(),
         "totalPickups": "0",
         "address": dropModel2.dropAddressInputController2.text
@@ -1716,7 +1783,7 @@ class _AddDropPickupState extends State<AddDropPickup> with FormValidators {
         "city" : dropCityValue3.toString(),
         "state" : dropStateValue3.toString(),
         "stateZipCode" : dropModel3.dropZipcoadController3.text,
-        "name" : mLoadDec.toString(),
+        "name" : dropModel3.dropLoadNameController3.text,
         "load_id": mLoadID.toString(),
         "totalPickups": "0",
         "address": dropModel3.dropAddressInputController3.text

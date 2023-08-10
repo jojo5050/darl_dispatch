@@ -13,4 +13,5 @@ class FirestoreConstants {
   static const content = "content";
   static const type = "type";
   static const trackingId = "trackingID";
+  static const status = "status";
 }

@@ -90,33 +90,6 @@ mixin ApiServices{
     }
   }
 
-  /*Future<Response?> apiCGetRequests(String endPoint, Map<String, dynamic> credentials) async {
-    try {
-      Dio dio = await getDio();
-      Response response = await dio.get(endPoint, queryParameters: credentials,
-          options: Options(
-              headers: {"Authorization": "Bearer " + await getAuthToken()}));
-      debugPrint(response.data.toString());
-      return response;
-    } on DioError catch (e) {
-      return catchError(e);
-    }
-  }*/
-  Future<Response?> apiCGetRequests(String endPoint, Map<String, dynamic> credentials) async {
-    try {
-      Dio dio = await getDio();
-      Response response = await dio.get(
-        endPoint,
-        queryParameters: credentials,
-        options: Options(headers: {"Authorization": "Bearer " + await getAuthToken()}),
-      );
-      return response;
-    } on DioError catch (e) {
-      throw Exception("API request failed: ${e.message}");
-    }
-  }
-
-
   Future<Response?> apiDeleteRequests(String endPoint) async {
     try {
       Dio dio = await getDio();

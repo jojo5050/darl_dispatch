@@ -4,12 +4,14 @@ import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../AuthManagers/authRepo.dart';
 import '../../../ConstantHelper/colors.dart';
 import '../../../Models/global_variables.dart';
+import '../Utils/loaderFadingBlue.dart';
 
 
 class LoadsAssignedPreview extends StatefulWidget {
@@ -96,7 +98,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                     ),
                     onSelected: (value){
                       switch(value){
-                        case 1: Routers.pushNamed(context, '/registered_loads_Preview');
+                        case 1: Routers.pushNamed(context, '/am_reg_loads_with_pd_Preview');
                         break;
 
                       }
@@ -135,20 +137,20 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
             Expanded(
               child: Container(
                   child: listOfAssignedLoads == null ? Center(
-                      child: CircularProgressIndicator(color: Colors.green,)) :
+                      child: LoaderFadingBlue()) :
                   listOfAssignedLoads!.isEmpty ?
                   Center(
                     child: Column(
                       children: [
                         SizedBox(height: 30.h,),
                         Icon(Icons.question_mark, color: Colors.grey,
-                          size: 40.sp,),
-                        const Text(
-                          "No Assigned Loads Yet",
+                          size: 30.sp,),
+                        Text(
+                          "No Assigned Loads",
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                              fontSize: 17.sp),
                         )
                       ],
                     ),
@@ -156,7 +158,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                       itemCount: listOfAssignedLoads!.length,
                       itemBuilder: (context, index) {
                         return Container(
-                            height: 48.h,
+                            height: 50.h,
                             child: Card(
                               elevation: 10,
                               shape: RoundedRectangleBorder(
@@ -210,10 +212,10 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                 switch(value){
                                                   case 1: getIdAndView(index);
                                                   break;
-                                                  case 2: getIdAndPush(index);
+                                                  /*case 2: getIdAndPush(index);
                                                   break;
                                                   case 3: getIndexdAndPush(index);
-                                                  break;
+                                                  break;*/
                                                   case 4: getIdAndPushToReassign(index);
                                                   break;
 
@@ -274,7 +276,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                       ),
                                                   ),
                                                 ),
-                                                PopupMenuItem(
+                                               /* PopupMenuItem(
                                                   value: 2,
                                                   child: Container(
                                                       child: Row(
@@ -299,8 +301,8 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                         ],
                                                       ),
                                                   ),
-                                                ),
-                                                PopupMenuItem(
+                                                ),*/
+                                               /* PopupMenuItem(
                                                   value: 3,
                                                   child: Container(
                                                       child: Row(
@@ -325,7 +327,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                         ],
                                                       ),
                                                   ),
-                                                ),
+                                                ),*/
 
                                               ]),
                                         ],
@@ -403,13 +405,17 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                   fontSize: 16.sp,
                                                   fontWeight: FontWeight.bold)),
                                           SizedBox(width: 2.w,),
-                                          Text(
-                                              "${listOfAssignedLoads![index]["shipperEmail"] ??
-                                                  ""}", style: TextStyle(
-                                              color: AppColors
-                                                  .dashboardtextcolor,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold)),
+                                          Container(constraints: BoxConstraints(maxWidth: 170),
+                                            child: Text(
+                                                "${listOfAssignedLoads![index]["shipperEmail"] ??
+                                                    ""}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: AppColors
+                                                        .dashboardtextcolor,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold)),
+                                          ),
                                         ],
 
                                       ),
@@ -424,14 +430,18 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                                   color: Colors.black,
                                                   fontSize: 16.sp,
                                                   fontWeight: FontWeight.bold)),
-                                          SizedBox(width: 2.w,),
-                                          Text(
-                                              "${listOfAssignedLoads![index]["shipperAddress"] ??
-                                                  ""}", style: TextStyle(
-                                              color: AppColors
-                                                  .dashboardtextcolor,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold)),
+
+                                          Container(constraints: BoxConstraints(maxWidth: 170),
+                                            child: Text(
+                                                "${listOfAssignedLoads![index]["shipperAddress"] ??
+                                                    ""}",
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                color: AppColors
+                                                    .dashboardtextcolor,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold)),
+                                          ),
                                         ],
 
                                       ),
@@ -442,7 +452,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
                                         children: [
                                           InkWell(onTap:(){
                                             getPickups(index);
-                                           // pickupsModal(index);
+
                                           },
                                             child: Container(
                                                 decoration: BoxDecoration(
@@ -482,7 +492,7 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
 
                                           InkWell(onTap: () {
 
-                                            getDrops(index);
+                                            getRegDrops(index);
 
                                           },
                                             child: Container(
@@ -659,11 +669,11 @@ class _LoadsAssignedPreviewState extends State<LoadsAssignedPreview> {
     }
   }
 
-  void getDrops(index) async {
+  void getRegDrops(index) async {
     final AuthRepo authRepo = AuthRepo();
      var loadID = listOfAssignedLoads![index]["load_id"];
     try {
-      Response? response = await authRepo.getPickups({
+      Response? response = await authRepo.getDrops({
         "loadID": loadID
       });
       //  print("print load id assssssss ${loadID}");

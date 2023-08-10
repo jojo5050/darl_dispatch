@@ -1,11 +1,15 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:darl_dispatch/LandingPageManagers/admin_landing_page_manager.dart';
 import 'package:darl_dispatch/Utils/localstorage.dart';
 import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../AuthManagers/authRepo.dart';
@@ -27,6 +31,8 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
   TextEditingController userLoginEmailController = TextEditingController();
   TextEditingController userLoginPasswordController = TextEditingController();
   final GlobalKey<FormState> userLoginFormKey = GlobalKey<FormState>();
+  CollectionReference usersRef = FirebaseFirestore.instance.collection("Users");
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   bool loading = false;
   bool _passwordVisible =false;
@@ -51,10 +57,10 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
       child: Scaffold(
         body: Stack(children: <Widget>[
           Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(colors:
-                [Colors.lightBlueAccent, Colors.greenAccent],
-                    begin: Alignment.centerLeft, end: Alignment.centerRight),)
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(colors:
+              [Colors.white, Colors.indigo],
+                  begin: Alignment.topCenter, end: Alignment.bottomCenter),),
           ),
           SingleChildScrollView(
             child: Form(
@@ -85,7 +91,7 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
                         decoration: TextDecoration.none),
                   ),
                   SizedBox(
-                    height: 18.h,
+                    height: 15.h,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -162,7 +168,7 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
                             fontSize: 15.sp,
                             fontWeight: FontWeight.bold),)),
                   SizedBox(
-                    height: 12.h,
+                    height: 7.h,
                   ),
 
                 //  loading ? ProgressBar():
@@ -189,7 +195,7 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
                         ),
                       )),
                   SizedBox(
-                    height: 5.h,
+                    height: 3.h,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -210,12 +216,34 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
                           },
                           child: Text(
                             "SIGN UP",
-                            style: TextStyle(color: Colors.blue, fontSize: 15.sp,
+                            style: TextStyle(color: Colors.green, fontSize: 15.sp,
                                 fontWeight: FontWeight.bold),
                           ))
                       //   Text("SIGN UP", style: TextStyle(color: Colors.blue, fontSize: 15.sp),)
                     ],
-                  )
+                  ), Text("OR", style: TextStyle(color: Colors.black,
+                      fontWeight: FontWeight.bold, fontSize: 18.sp),),
+                  SizedBox(
+                    width: 2.w,
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                    Container(height: 10.h, width: 15.w,
+                    decoration: const BoxDecoration(image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage('assets/images/googleImage.png'),
+                    ), shape: BoxShape.circle),),
+                      TextButton(onPressed: (){
+
+                        signInWithGoogle(context);
+                             }, child: const Text('Sign in with Google',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                        ),)
+
+                      )],)
                 ],
               ),
             ),
@@ -384,6 +412,10 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
       User? firebaseUser = (await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password)).user;
       if(firebaseUser != null){
+        await usersRef.doc(firebaseAuth.currentUser!.uid).update({
+          "status": "Online"
+        });
+
         return firebaseAuth.currentUser?.uid;
       }
 
@@ -441,4 +473,33 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
     )) ??
         false;
   }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+      final AuthCredential authCredential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken);
+
+      var idtk = googleSignInAuthentication.idToken;
+      var acctk = googleSignInAuthentication.accessToken;
+      print(":::::;;;;;;;;;;;;;;;;;;;;$idtk");
+      print(":::::;;;;;;;;..........;;;;;;;;;;;;$acctk");
+      
+      // Getting users credential
+      UserCredential result = await auth.signInWithCredential(authCredential);
+      User? user = result.user;
+
+      if (result != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => AdminLandingPageManager()));
+      }  // if result not null we simply call the MaterialpageRoute,
+      // for go to the HomePage screen
+    }
+  }
+
+
 }

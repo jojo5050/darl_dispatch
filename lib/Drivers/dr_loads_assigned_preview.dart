@@ -1,4 +1,5 @@
 
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:darl_dispatch/Utils/localstorage.dart';
 import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
@@ -70,32 +71,29 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                 style: TextStyle(
                     color: AppColors.dashboardtextcolor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20.sp,
+                    fontSize: 18.sp,
                     decoration: TextDecoration.none),
               ),
-              Container(
-                height: 0,
-                width: 0,
-              ),
+              Container(height: 0, width: 0,)
             ]),
 
             Expanded(
               child: Container(
                   child: listOfAssignedLoads == null ? Center(
-                      child: CircularProgressIndicator(color: Colors.green,)) :
+                      child: LoaderFadingBlue()) :
                   listOfAssignedLoads!.isEmpty ?
                   Center(
                     child: Column(
                       children: [
                         SizedBox(height: 30.h,),
                         Icon(Icons.question_mark, color: Colors.grey,
-                          size: 40.sp,),
-                        const Text(
+                          size: 30.sp,),
+                         Text(
                           "No Assigned Load",
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                              fontSize: 17.sp),
                         )
                       ],
                     ),
@@ -103,7 +101,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                       itemCount: listOfAssignedLoads!.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          height: 48.h,
+                          height: 50.h,
                           child: Card(
                             elevation: 10,
                             shape: RoundedRectangleBorder(
@@ -266,8 +264,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                                 ""}", style: TextStyle(
                                             color: AppColors
                                                 .dashboardtextcolor,
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold)),
+                                            fontSize: 16.sp,)),
                                       ],
 
                                     ),
@@ -286,7 +283,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             color: AppColors
                                                 .dashboardtextcolor,
                                             fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold)),
+                                        )),
                                       ],
 
                                     ),
@@ -307,7 +304,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             color: AppColors
                                                 .dashboardtextcolor,
                                             fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold)),
+                                            )),
                                       ],
 
                                     ),
@@ -328,7 +325,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             color: AppColors
                                                 .dashboardtextcolor,
                                             fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold)),
+                                            )),
                                       ],
 
                                     ),
@@ -344,13 +341,17 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.bold)),
                                         SizedBox(width: 2.w,),
-                                        Text(
-                                            "${listOfAssignedLoads![index]["shipperAddress"] ??
-                                                ""}", style: TextStyle(
-                                            color: AppColors
-                                                .dashboardtextcolor,
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold)),
+                                        Container(constraints: BoxConstraints(maxWidth: 170),
+                                          child: Text(
+                                              "${listOfAssignedLoads![index]["shipperAddress"] ??
+                                                  ""}",
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyle(
+                                              color: AppColors
+                                                  .dashboardtextcolor,
+                                              fontSize: 16.sp,
+                                              )),
+                                        ),
                                       ],
 
                                     ),
@@ -360,7 +361,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                         .spaceBetween,
                                       children: [
                                         InkWell(onTap:(){
-                                          getAsPickups(index);
+                                        //  getAsPickups(index);
                                           // pickupsModal(index);
                                         },
                                           child: Container(
@@ -401,7 +402,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
 
                                         InkWell(onTap: () {
 
-                                          getAsDrops(index);
+                                         // getAsDrops(index);
 
                                         },
                                           child: Container(
@@ -456,7 +457,7 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                           children: [
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment
-                                                  .start,
+                                                  .center,
                                               children: [
                                                 Text("Assigned To:",
                                                   style: TextStyle(
@@ -584,14 +585,12 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
   }
 
   void getAsDrops(index) async {
-    var driverId = await LocalStorage().fetch("idKey");
     final AuthRepo authRepo = AuthRepo();
     var loadID = listOfAssignedLoads![index]["load_id"];
 
     try {
-      Response? response = await authRepo.getAssignedDrops({
+      Response? response = await authRepo.getDrops({
         "load_id": loadID,
-        "Driver_id": driverId
       });
       if (response != null && response.statusCode == 200
           && response.data["status"] == "success") {
@@ -743,22 +742,11 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             ],
 
                                           ),
-                                         /* Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Drop City:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedDropList![index]["city"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
 
-                                          ),
-                                          SizedBox(height: 1.5.h,),
+                                          SizedBox(height: 1.h,),
                                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Drop date:",  style: TextStyle(
+                                              Text("Drop Date:",  style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                               SizedBox(width: 4.w,),
@@ -768,7 +756,8 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             ],
 
                                           ),
-                                          SizedBox(height: 1.5.h,),
+
+                                          SizedBox(height: 1.h,),
                                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text("Drop Time:",  style: TextStyle(
@@ -781,23 +770,10 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             ],
 
                                           ),
-                                          SizedBox(height: 1.5.h,),
-                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Drop ZipCode:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedDropList![index]["stateZipCode"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),
                                           SizedBox(height: 1.h,),
                                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Drop Address",  style: TextStyle(
+                                              Text("Address:",  style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                               SizedBox(width: 4.w,),
@@ -806,7 +782,8 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                                   fontSize: 17.sp, fontWeight: FontWeight.bold)),
                                             ],
 
-                                          ),*/
+                                          ),
+
 
                                         ],
                                       ),
@@ -948,70 +925,6 @@ class _DrLoadsAssignedPreviewState extends State<DrLoadsAssignedPreview> {
                                             ],
 
                                           ),
-                                         /* Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Pickup City:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedPickupList![index]["city"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),
-                                          SizedBox(height: 1.5.h,),
-                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Pickup date:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedPickupList![index]["date"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),
-                                          SizedBox(height: 1.5.h,),
-                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Pickup Time:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedPickupList![index]["time"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),
-                                          SizedBox(height: 1.5.h,),
-                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Pickup ZipCode:",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedPickupList![index]["stateZipCode"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),
-                                          SizedBox(height: 1.5.h,),
-                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Pickup Address",  style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                              SizedBox(width: 4.w,),
-                                              Text("${assignedPickupList![index]["address"]}",  style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                                            ],
-
-                                          ),*/
 
                                         ],
                                       ),

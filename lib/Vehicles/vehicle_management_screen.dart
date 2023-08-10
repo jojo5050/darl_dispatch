@@ -20,7 +20,7 @@ class _VehiclesState extends State<Vehicles> {
       appBar: AppBar(
         title: Text("Register/ Assign Vehicles",
             style:
-            TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp)),
+            TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.sp)),
         backgroundColor: Colors.indigo,
       ),
       backgroundColor: Colors.lightGreenAccent,
@@ -34,7 +34,7 @@ class _VehiclesState extends State<Vehicles> {
 
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
                   child: Column(children: [
                     Container(
                       height: 10.h,
@@ -64,7 +64,7 @@ class _VehiclesState extends State<Vehicles> {
                                         "Register Vehicle",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(
@@ -174,7 +174,7 @@ class _VehiclesState extends State<Vehicles> {
                                         "Registered Vehicles",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(

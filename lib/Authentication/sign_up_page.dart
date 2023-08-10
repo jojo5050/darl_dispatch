@@ -69,10 +69,10 @@ class _SignUpPageState extends State<SignUpPage> with FormValidators {
     return Scaffold(
       body: Stack(children: <Widget>[
            Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors:
-              [Colors.lightBlueAccent, Colors.greenAccent],
-                  begin: Alignment.centerLeft, end: Alignment.centerRight),)
+             decoration: const BoxDecoration(
+               gradient: LinearGradient(colors:
+               [Colors.indigo, Colors.white],
+                   begin: Alignment.topCenter, end: Alignment.bottomCenter),),
             ),
             SingleChildScrollView(
               child: Form(
@@ -83,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> with FormValidators {
                       height: 3.h,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15, top: 25),
+                      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children:  [
@@ -212,6 +212,14 @@ class _SignUpPageState extends State<SignUpPage> with FormValidators {
                        ),
                      ),
                    ),
+                    SizedBox(height: 0.5.h,),
+                    Text(
+                      "Enter the complete cell phone digits" ,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13.sp,
+                      ),
+                    ),
 
                     SizedBox(
                       height: 2.h,
@@ -251,7 +259,7 @@ class _SignUpPageState extends State<SignUpPage> with FormValidators {
                             hintStyle: const TextStyle(color: Colors.black)),
                       ),
                     ),
-                    SizedBox(height: 1.h,),
+                    SizedBox(height: 0.5.h,),
                     Text(
                       "Minimum of 8 characters" ,
                       style: TextStyle(
@@ -491,6 +499,8 @@ class _SignUpPageState extends State<SignUpPage> with FormValidators {
           FirestoreConstants.id: customUser.firebaseUser!.uid,
           FirestoreConstants.chattingWith: null,
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+        //  'status': 'unavailable',
+
 
         });
       }

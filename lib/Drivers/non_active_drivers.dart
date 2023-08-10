@@ -14,7 +14,7 @@ class NonActiveDrivers extends StatefulWidget {
 }
 
 class _NonActiveDriversState extends State<NonActiveDrivers> {
-  List<Map<String, dynamic>>? listOfActiveDrivers;
+  List<Map<String, dynamic>>? listOfNonActiveDrivers;
 
   var errMsg;
 
@@ -37,14 +37,14 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: Container(
-            child: listOfActiveDrivers == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
-            listOfActiveDrivers!.isEmpty ?
+            child: listOfNonActiveDrivers == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+            listOfNonActiveDrivers!.isEmpty ?
             Center(
               child: Column(
                 children: [
                   Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
                   const Text(
-                    "No Driver found",
+                    "No Record found",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -54,11 +54,13 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
               ),
             ):
             ListView.builder(
-                itemCount: listOfActiveDrivers!.length,
+                itemCount: listOfNonActiveDrivers!.length,
                 itemBuilder: (context, index){
+                  var pic = listOfNonActiveDrivers![index]["picture"];
+                  var avatar = listOfNonActiveDrivers![index]["avatar"];
                   return GestureDetector(onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                      return ClientProfilePage(staffInfo: listOfActiveDrivers![index] );
+                      return ClientProfilePage(staffInfo: listOfNonActiveDrivers![index] );
                     }));
 
                   },
@@ -77,21 +79,23 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
                                 children: [
                                   Container(
                                     constraints: BoxConstraints(maxWidth: 250),
-                                    child: Text("${listOfActiveDrivers![index]["name"]}",
+                                    child: Text("${listOfNonActiveDrivers![index]["name"]}",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(color: Colors.white, fontSize: 18.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-
-                                  const CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: Colors.green,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  if(pic != null)
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.green,
+                                      backgroundImage: NetworkImage(pic ?? ""),
+                                    )else
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.green,
+                                      backgroundImage: NetworkImage(avatar ?? ""),
+                                    )
                                 ],
                               ),
                               SizedBox(height: 1.h,),
@@ -109,7 +113,7 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
                                       Container(
                                         constraints: BoxConstraints(maxWidth: 200),
                                         child: Text(
-                                          "${listOfActiveDrivers![index]["tel" ?? ""]}",
+                                          "${listOfNonActiveDrivers![index]["tel" ?? ""]}",
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                               color: Colors.white,
@@ -129,7 +133,7 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
                                       Container(
                                         constraints: BoxConstraints(maxWidth: 200),
                                         child: Text(
-                                          "${listOfActiveDrivers![index]["email" ?? ""]}",
+                                          "${listOfNonActiveDrivers![index]["email" ?? ""]}",
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                               color: Colors.white,
@@ -170,10 +174,10 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
           }
         }
         setState(() {
-          listOfActiveDrivers = data;
+          listOfNonActiveDrivers = data;
         });
 
-        print("printing list of loads asssssss $listOfActiveDrivers");
+        print("printing list of loads asssssss $listOfNonActiveDrivers");
 
       }if(response != null && response.statusCode == 404){
         setState(() {
@@ -278,7 +282,7 @@ class _NonActiveDriversState extends State<NonActiveDrivers> {
   }
 
   void deleteStaff(index) async {
-    var staffID = listOfActiveDrivers![index]["id"];
+    var staffID = listOfNonActiveDrivers![index]["id"];
     final AuthRepo authRepo = AuthRepo();
 
     try{

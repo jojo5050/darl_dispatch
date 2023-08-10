@@ -144,7 +144,6 @@ class _EditProfileState extends State<EditProfile> with FormValidators {
                   uploadImageToFirestore(profileImage!);
                   uploadToApi(imageData: profileImage, );
 
-
                   },
                     child: Text("Upload ",
                       style: TextStyle(fontSize: 18.sp, color: Colors.indigo,
@@ -460,29 +459,29 @@ class _EditProfileState extends State<EditProfile> with FormValidators {
             backgroundColor: Colors.black87,
             actions: <Widget>[SizedBox(height: 30,),
               Center(child: Icon(Icons.check_circle_outline,
-                color: Colors.green, size: 50.sp,)),
+                color: Colors.green, size: 35.sp,)),
               SizedBox(height: 20,),
-              const Center(
+               Center(
                 child: Text(" Success!",
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.bold
                   ),
                 ),
               ),
               SizedBox(height: 30,),
-              const Center(
+               Center(
                 child: Text(" Your Details was Updated",
                   style: TextStyle(
-                      fontSize: 20, color: Colors.white
+                      fontSize: 16.sp, color: Colors.white
                   ),
                 ),
               ), SizedBox(height: 5,),
-              const Center(
+               Center(
                 child: Text("Successfully",
                   style: TextStyle(
-                      fontSize: 20, color: Colors.white
+                      fontSize: 16.sp, color: Colors.white
                   ),
                 ),
               ),
@@ -587,6 +586,7 @@ class _EditProfileState extends State<EditProfile> with FormValidators {
             setState(() {
               profileImage = file;
             });
+
           });
 
     }catch(e){}
@@ -594,14 +594,14 @@ class _EditProfileState extends State<EditProfile> with FormValidators {
   }
 
   Future<void> uploadToApi({File? imageData}) async {
-    AuthRepo authRepo = AuthRepo();
+
     var logedUserEmail = await LocalStorage().fetch("userData");
     var userEmail = logedUserEmail["email"];
 
     try{
       var request = http.MultipartRequest('POST',
           Uri.parse('https://nieveslogistics.com/api/php-api/profile_picture.php'));
-      request.fields['email'] = userEmail;
+          request.fields['email'] = userEmail;
       request.files.add(http.MultipartFile(
         'image',
         imageData!.readAsBytes().asStream(),

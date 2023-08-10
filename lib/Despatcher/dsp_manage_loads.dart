@@ -73,7 +73,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                                       "Register New Load",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -130,7 +130,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                                       "Newly Registered Loads",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -186,7 +186,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                                        "Loads with Pick/Drops",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -242,7 +242,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                                       "Loads Assigned",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
@@ -275,7 +275,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                     height: 10.h,
                     child: InkWell(
                       onTap: () {
-                        Routers.pushNamed(context, '/dsp_delivered_preview');
+                        Routers.pushNamed(context, '/dspDeliveredLoadsManager');
                       },
                       child: Card(
                         elevation: 10,
@@ -298,7 +298,7 @@ class _DspManageLoadState extends State<DspManageLoad> {
                                       "Load Delivered",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 19.sp,
+                                          fontSize: 17.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(

@@ -9,6 +9,7 @@ import '../LandingPageManagers/admin_landing_page_manager.dart';
 import '../LandingPageManagers/dispatcher_landing_page_manager.dart';
 import '../LandingPageManagers/driver_landing_manager.dart';
 import '../Models/user.dart';
+import '../Onboaarding/onboarding_manager.dart';
 import '../Onboaarding/onboarding_page.dart';
 import '../Providers/authProvider.dart';
 import '../Utils/loader_fading_circle.dart';
@@ -40,13 +41,13 @@ class _AuthCheckerState extends State<AuthChecker> {
                    return const DriverLandingManager();
                  }
                  if (checkAuthenticatedAccountant(snapShot.data)) {
-                   return const AccountantLandingPageManager();
+                   return AccountantLandingPageManager();
                  }
                  if (checkAuthenticatedAdmin(snapShot.data)) {
                    return const AdminLandingPageManager();
                  }
                }
-               return const OnboardingPage();
+               return OnboardManager();
              }
 
              return  Container(

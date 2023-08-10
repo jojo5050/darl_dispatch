@@ -42,7 +42,7 @@ class _RegisterLoadState extends State<RegisterLoad> with FormValidators {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 6.h),
           child: Form(key: loadModel.loadRegFormKey,
             child: Column(
               children: [
@@ -62,7 +62,7 @@ class _RegisterLoadState extends State<RegisterLoad> with FormValidators {
                         style: TextStyle(
                             color: AppColors.dashboardtextcolor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.sp,
+                            fontSize: 18.sp,
                             decoration: TextDecoration.none),
                       ),
                   Container()
@@ -152,53 +152,6 @@ class _RegisterLoadState extends State<RegisterLoad> with FormValidators {
                 SizedBox(
                   height: 1.h,
                 ),
-               /* Container(
-                  height: 9.h,
-                  width: MediaQuery.of(context).size.width / 0.7,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.black),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        TextFormField(
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1960),
-                                lastDate: DateTime(2025));
-                            if (pickedDate != null) {
-                              print("..........................$pickedDate");
-                              String formatDate =
-                              DateFormat("yyyy-MM-DD").format(pickedDate);
-                              setState(() {
-                                loadRegdateInputController.text = formatDate;
-                              });
-                            } else {
-                              print("...............Date is empty");
-                            }
-                          },
-                          controller: loadRegdateInputController,
-                          style: TextStyle(color: Colors.black, fontSize: 18.sp),
-                          decoration: const InputDecoration(
-                              suffixIcon: Icon(
-                                Icons.calendar_today,
-                                color: Colors.black,
-                              ),
-                              hintText: "Date",
-                              hintStyle: TextStyle(color: Colors.grey)),
-                          readOnly: true,
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),*/
                 SizedBox(
                   height: 1.h,
                 ),
@@ -398,7 +351,7 @@ class _RegisterLoadState extends State<RegisterLoad> with FormValidators {
      });
 
      if(response != null && response.statusCode == 200 && response.data["status"] == 200){
-       desplayLoginsuccessmssg();
+      // desplayLoginsuccessmssg();
        stopLoder();
        if(usrRole == role){
 

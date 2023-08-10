@@ -8,12 +8,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../General/sample_page.dart';
+import '../Utils/image_picker_manager.dart';
 import 'chat_provider.dart';
 import '../../Models/firestore_constants.dart';
 import '../../Utils/full_photo_page.dart';
@@ -49,6 +51,8 @@ import 'message_chat.dart';
     String imageUrl = "";
 
     bool _hasInternet = true;
+
+    final ImagePickerManager imagePickerManager = ImagePickerManager();
 
     @override
   void initState() {
@@ -563,12 +567,37 @@ import 'message_chat.dart';
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
         if (imageFile != null) {
+
+           await cropImage(imageFile);
+
           setState(() {
             isLoading = true;
           });
+
           uploadFile();
         }
       }
+    }
+
+    cropImage(File? imageFile) async {
+     File? cropedImage = await ImageCropper().cropImage(
+         sourcePath: imageFile!.path,
+         aspectRatioPresets: Platform.isAndroid
+             ? [CropAspectRatioPreset.square]
+             : [CropAspectRatioPreset.square],
+         androidUiSettings:  const AndroidUiSettings(
+             toolbarTitle: 'Upload Image',
+             toolbarColor: Colors.black38,
+             toolbarWidgetColor: Colors.white,
+             initAspectRatio: CropAspectRatioPreset.original,
+             lockAspectRatio: false),
+         iosUiSettings:  const IOSUiSettings(
+           title: 'Upload Image',
+         ));
+     print("print ::::::::::::::::::$cropedImage");
+
+          return cropedImage;
+
     }
 
     Future uploadFile() async {
@@ -672,6 +701,8 @@ import 'message_chat.dart';
         SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       });
     }
+
+
 }
 
   class ChatPageArgument {

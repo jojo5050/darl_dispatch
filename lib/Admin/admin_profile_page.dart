@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,14 +35,13 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     checkInternetConnection();
+    getUser();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
         body: SingleChildScrollView(
           child: Container(
             decoration: const BoxDecoration(
@@ -53,11 +53,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
               child: Column(
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    /* IconButton(onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                          icon: const Icon(Icons.arrow_back_ios, size: 30, color: Colors.black,)),*/
-                    Container(
+                         Container(
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
@@ -139,11 +135,11 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
                           ]),
                     ),
                   ]),
-                  SizedBox(height: 1.h,),
+                  SizedBox(height: 3.h,),
                   Container(
-                      child: profilePic == null ? CircularProgressIndicator():
+                      child: profilePic == null ? LoaderFadingBlue():
                       CircleAvatar(
-                        radius: 65,
+                        radius: 58,
                         backgroundColor: Colors.transparent,
                         backgroundImage: NetworkImage(profilePic ?? ""),
                       )),
@@ -152,16 +148,16 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
                   Row(mainAxisAlignment: MainAxisAlignment.center,
                     children:  [
                       Text("${userName ?? ""} ", style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.sp),)
+                          color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16.sp),)
                     ],),
                   SizedBox(height: 1.h,),
                   Row(mainAxisAlignment: MainAxisAlignment.center,
                     children:  [
                       Text("${userRole ?? ""}", style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.normal, fontSize: 18.sp),)
+                          fontStyle: FontStyle.normal, fontSize: 15.sp),)
                     ],),
-                  SizedBox(height: 6.h,),
+                  SizedBox(height: 3.h,),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 2.5,
@@ -177,30 +173,30 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("TEL:", style: TextStyle(color: Colors.black,
-                                fontSize: 19.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 17.sp, fontWeight: FontWeight.bold),),
                             SizedBox(width: 2.w,),
                             Text("${telNum ?? ""}", style: TextStyle(color: Colors.white,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),),
                           ],
                         ),
                         SizedBox(height: 3.h,),
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Email:", style: TextStyle(color: Colors.black,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 17.sp, fontWeight: FontWeight.bold),),
                             SizedBox(width: 2.w,),
                             Text("${email ?? ""}", style: TextStyle(color: Colors.white,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),),
                           ],
                         ),
                         SizedBox(height: 3.h, ),
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("A/C Number:", style: TextStyle(color: Colors.black,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 17.sp, fontWeight: FontWeight.bold),),
                             SizedBox(width: 2.w,),
                             Text("${accNum ?? ""}", style: TextStyle(color: Colors.white,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),),
                           ],
                         ),
 
@@ -208,10 +204,10 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Bank Name:", style: TextStyle(color: Colors.black,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 17.sp, fontWeight: FontWeight.bold),),
                             SizedBox(width: 2.w,),
                             Text("${bankName ?? ""}", style: TextStyle(color: Colors.white,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),),
                           ],
                         ),
 
@@ -219,10 +215,10 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Address:", style: TextStyle(color: Colors.black,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 17.sp, fontWeight: FontWeight.bold),),
                             SizedBox(width: 2.w,),
                             Text("${address ?? ""}", style: TextStyle(color: Colors.white,
-                                fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),),
                           ],
                         ),
                       ],),
@@ -234,12 +230,14 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   void signOut(BuildContext context) async {
     // LocalStorage().store("token", "");
+   /* await usersRef.doc(_firebaseAuth.currentUser!.uid).update({
+      "status": "Offline"
+    });*/
     _firebaseAuth.signOut();
     LocalStorage().delete("token");
     LocalStorage().delete("userData");
@@ -249,6 +247,15 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
 
     Routers.replaceAllWithName(context, '/login_page');
 
+  }
+
+  void _updateUserOnlineStatus(bool isOnline) async {
+    String currentUser = FirebaseAuth.instance.currentUser!.uid;
+    String onlineStatus = isOnline ? "Online" : "Offline";
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(currentUser)
+        .update({"onlineStatus": onlineStatus});
   }
 
   Future<void> checkInternetConnection() async {
@@ -299,5 +306,11 @@ class _AdminProfilePageState extends State<AdminProfilePage> with WidgetsBinding
 
   void _stopLocationUpdates() {
     _locationTimer?.cancel();
+  }
+
+  void getUser() {
+    print(";;;;;;;;;;;;;;;$profilePic");
+    print(";;;;;;;;;:::::::::;;;;;;$userName");
+
   }
 }

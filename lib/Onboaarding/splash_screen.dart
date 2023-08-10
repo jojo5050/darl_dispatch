@@ -25,7 +25,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(colors:
+        [Colors.white, Colors.indigo],
+            begin: Alignment.topCenter, end: Alignment.bottomCenter),),
+    //  color: Colors.white,
       child: Column(
         children: [
           SizedBox(height: 10.h,),

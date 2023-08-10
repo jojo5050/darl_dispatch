@@ -17,13 +17,11 @@ class AdminManageStaff extends StatefulWidget {
 class _AdminManageStaffState extends State<AdminManageStaff> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopControll,
-      child: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             title: Text("Manage Staffs",
                 style:
-                TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp)),
+                TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.sp)),
             backgroundColor: Colors.indigo,
           ),
           body: Stack(children: <Widget>[
@@ -66,7 +64,7 @@ class _AdminManageStaffState extends State<AdminManageStaff> {
                                         "Registered Staffs",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(
@@ -124,7 +122,7 @@ class _AdminManageStaffState extends State<AdminManageStaff> {
                                         "Register New Staff",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(
@@ -157,7 +155,7 @@ class _AdminManageStaffState extends State<AdminManageStaff> {
                       height: 10.h,
                       child: InkWell(
                         onTap: () {
-                          Routers.pushNamed(context, '/staff_due_for_pay');
+                          Routers.pushNamed(context, '/staffDue');
                         },
                         child: Card(
                           shape: RoundedRectangleBorder(
@@ -175,7 +173,7 @@ class _AdminManageStaffState extends State<AdminManageStaff> {
                                         "Staffs Due For Payment",
                                         style: TextStyle(
                                             color: AppColors.dashboardtextcolor,
-                                            fontSize: 19.sp,
+                                            fontSize: 17.sp,
                                             fontWeight: FontWeight.bold),
                                       ),
 
@@ -195,8 +193,7 @@ class _AdminManageStaffState extends State<AdminManageStaff> {
                 ),
               ),
             ),
-          ])),
-    );
+          ]));
   }
 
 

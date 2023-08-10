@@ -39,41 +39,23 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
   bool loading = false;
 
 
-  var rateCon;
-  var amount;
-  var weight;
-  var loadDesc;
-  var brokerName;
-  var brokerEmail;
-  var brokerPhone;
-  var shipperEmail;
-  var shipperAddress;
-  var date;
-
-
-  @override
-  void initState() {
-    getLoadDetails();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    rateConfirmController = TextEditingController(text: rateCon);
-    amountController  = TextEditingController(text: amount);
-    weightController  = TextEditingController(text: weight);
-    loadDescController = TextEditingController(text: loadDesc);
-    brokerNameController = TextEditingController(text: brokerName);
-    brokerEmailController = TextEditingController(text: brokerEmail);
-    brokerPhoneController = TextEditingController(text: brokerPhone);
-    shiperEmailController = TextEditingController(text: shipperEmail);
-    shipperAddressController = TextEditingController(text: shipperAddress);
-    dateController = TextEditingController(text: date);
+    rateConfirmController = TextEditingController(text: editRateCon);
+    amountController  = TextEditingController(text: editAmout);
+    weightController  = TextEditingController(text: editWeight);
+    loadDescController = TextEditingController(text: editDescription);
+    brokerNameController = TextEditingController(text: editBrokerName);
+    brokerEmailController = TextEditingController(text: editBrokerEmail);
+    brokerPhoneController = TextEditingController(text: editBrokerPhone);
+    shiperEmailController = TextEditingController(text: editShipperEmail);
+    shipperAddressController = TextEditingController(text: editShiperAdd);
+    dateController = TextEditingController(text: editDate);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        title: const Text("Update Load", style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold)),
+        title: Text("Update Load", style: TextStyle(color: Colors.white,
+            fontWeight: FontWeight.bold, fontSize: 17.sp)),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
@@ -117,7 +99,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: rateConfirmController,
                 validator: validateName,
                 onChanged: (String val){
-                  rateCon = val;
+                  editRateCon = val;
                 },
               ),
               SizedBox(
@@ -140,7 +122,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: amountController,
                 validator: validateName,
                 onChanged: (String val){
-                  amount = val;
+                  editAmout = val;
                 },
               ),
               SizedBox(
@@ -149,7 +131,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
 
               SizedBox(height: 0.5.h,),
               Container(
-                height: 8.h,
+                height: 9.h,
                 width: MediaQuery.of(context).size.width / 0.7,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.black),
@@ -180,9 +162,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                             print("...............Date is empty");
                           }
                         },
-                       /* onChanged: (val){
-                          date = val;
-                        },*/
+
                         controller: dateController,
                         style: TextStyle(color: Colors.black, fontSize: 18.sp),
                         decoration: const InputDecoration(
@@ -214,7 +194,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: weightController,
                 validator: validateName,
                 onChanged: (String val){
-                  weight = val;
+                  editWeight = val;
                 },
               ),
               SizedBox(
@@ -236,7 +216,8 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: loadDescController,
                 validator: validateName,
                 onChanged: (String val){
-                  bankName = val;
+                  editDescription = val;
+                  print(":::::::::::::::::::::::::::$editDescription");
                 },
               ),
               SizedBox(
@@ -272,7 +253,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: brokerNameController,
                 validator: validateName,
                 onChanged: (String val){
-                  brokerName = val;
+                  editBrokerName = val;
                 },
               ),
               SizedBox(
@@ -294,7 +275,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: brokerEmailController,
                 validator: validateEmail,
                 onChanged: (String val){
-                  brokerEmail = val;
+                  editBrokerEmail = val;
                 },
               ),
               SizedBox(height: 0.5.h,),
@@ -312,7 +293,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: brokerPhoneController,
                 validator: validatePhoneNum,
                 onChanged: (String val){
-                  brokerPhone = val;
+                  editBrokerPhone = val;
                 },
               ),
               SizedBox(height: 4.h,),
@@ -344,7 +325,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: shiperEmailController,
                 validator: validateEmail,
                 onChanged: (String val){
-                  shipperEmail = val;
+                  editShipperEmail = val;
                 },
               ),
 
@@ -363,7 +344,7 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 controller: shipperAddressController,
                 validator: validateAddress,
                 onChanged: (String val){
-                  shipperAddress = val;
+                  editShiperAdd = val;
                 },
               ),
 
@@ -420,7 +401,8 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
         "brokerEmail" : brokerEmailController.text,
         "brokerNumber" : brokerPhoneController.text,
         "shipperEmail" : shiperEmailController.text,
-        "shipperAddress" : shipperAddressController.text
+        "shipperAddress" : shipperAddressController.text,
+        "id": singleLoadID.toString()
       });
 
 
@@ -477,60 +459,6 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
 
   }
 
-  void getLoadDetails() async {
-
-    final AuthRepo authRepo = AuthRepo();
-    try{
-      Response? response = await authRepo.fetchSingleLoad({
-        "id": singleLoadID.toString()
-      });
-
-      if(response != null && response.statusCode == 200){
-
-        setState(() {
-          rateCon = response.data["Rate ConfirmationID"];
-        });
-        print("printttttt rate con as $rateCon");
-        setState(() {
-          amount = response.data["Rate"];
-        });
-        setState(() {
-          weight = response.data["weight"];
-        });
-        setState(() {
-          loadDesc = response.data["Broker Name"];
-        });
-        setState(() {
-          brokerName = response.data["Broker Name"];
-        });
-        setState(() {
-          brokerEmail = response.data["Broker Name"];
-        });
-        setState(() {
-          brokerPhone = response.data["Broker Name"];
-        });
-        setState(() {
-          shipperEmail = response.data["Shipper Email"];
-        });
-        setState(() {
-          shipperAddress = response.data["Shipper Address"];
-        });
-        setState(() {
-          date = response.data["date Registered"];
-        });
-
-      }else{
-
-        print("could not retreive it");
-      }
-
-    }catch(e, str){
-       debugPrint("error $e");
-       debugPrint("StackTrace: $str");
-    }
-
-  }
-
   void showPopUp() {
     showDialog(
       context: context,
@@ -570,6 +498,11 @@ class _EditRegisteredLoadsState extends State<EditRegisteredLoads> with FormVali
                 child: TextButton(
                     onPressed: () {
                      Navigator.of(context).pop();
+                      if(userRole == "Admin"){
+                        Routers.pushNamed(context, '/am_reg_loads_with_pd_Preview' );
+                      }else{
+                        Routers.pushNamed(context, '/dsp_reg_loads_with_pd_preview');
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,

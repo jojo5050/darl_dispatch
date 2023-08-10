@@ -36,8 +36,8 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        title: const Text("Register New Vehicle", style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold)),
+        title: Text("Register New Vehicle", style: TextStyle(color: Colors.white,
+            fontWeight: FontWeight.bold, fontSize: 17.sp)),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
@@ -59,7 +59,7 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
                     hintText: "Vehicle ID",
                     hintStyle: TextStyle(color: Colors.grey)),
                 controller: vehicleIdController ,
-              //  validator: validateName,
+                validator: vehicleIdValidator,
               ),
               SizedBox(
                 height: 1.5.h,
@@ -77,7 +77,7 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
                     hintText: "VIN",
                     hintStyle: TextStyle(color: Colors.grey)),
                 controller: vinController,
-              //  validator: validatePhoneNum,
+                validator: vinValidator,
               ),
               SizedBox(
                 height: 1.5.h,
@@ -94,7 +94,7 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
                     hintText: "Number Plate",
                     hintStyle: TextStyle(color: Colors.grey)),
                 controller: plateNumberController,
-              //  validator: validateBankName,
+                validator: plateNumberValidator,
               ),
               SizedBox(
                 height: 1.5.h,
@@ -169,7 +169,7 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
     final AuthRepo authRepo = AuthRepo();
 
     try{
-      Response? response = await authRepo.createNewUser({
+      Response? response = await authRepo.registerNewVehicle({
         "vehicleType": dropDownValue,
         "number": vehicleIdController.text,
         "vin": vinController.text,
@@ -178,6 +178,8 @@ class _RegisterNewVehicleState extends State<RegisterNewVehicle> with FormValida
       });
 
       if(response != null && response.statusCode == 200 && response.data["status"] == 200){
+
+        print("printing response data as ${response.data}");
         showSuccessPopup();
 
       }else{

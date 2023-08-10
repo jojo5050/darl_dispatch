@@ -1,3 +1,4 @@
+import 'package:darl_dispatch/Utils/loaderFadingBlue.dart';
 import 'package:darl_dispatch/Utils/routers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,15 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
         body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
               child: Container(
-                child: listOfVehicles == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+                child: listOfVehicles == null ? Center(child: LoaderFadingBlue()):
                 listOfVehicles!.isEmpty ?
                 Center(
                   child: Column(
                     children: [
-                      Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
+                      SizedBox(height: 15.h,),
+                      Icon(Icons.question_mark, color: Colors.grey, size: 30.sp,),
                       const Text(
-                        "No Registered Vehicles Yet",
+                        "No Registered Vehicles ",
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -60,7 +62,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        elevation: 10,
+                        elevation: 5,
                         child: Container(
                           decoration: BoxDecoration(),
                           child: Padding(
@@ -77,16 +79,16 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                           "NUMBER PLATE:",
                                           style: TextStyle(
                                               color: AppColors.dashboardtextcolor,
-                                              fontSize: 17.sp,
+                                              fontSize: 16.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        SizedBox(width: 2.w,),
+                                        SizedBox(width: 4.w,),
                                         Text(
                                           "${listOfVehicles![index][ "plateNumber"]}",
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18.sp,
-                                              fontWeight: FontWeight.bold),
+                                              fontSize: 16.sp, fontWeight: FontWeight.bold
+                                              ),
                                         ),
 
                                       ],
@@ -103,14 +105,27 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                             size: 30,
                                           ),
                                         ),
+
+                                        onSelected: (val){
+                                          switch(val){
+                                            case 1: ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                content: Text("work in progress, try again later"),
+                                              duration: Duration(seconds: 2),));
+                                            break;
+                                            case 2: editVehicle(index);
+                                            break;
+                                            case 3: showPopup(index);
+                                            break;
+
+                                          }
+
+                                        },
+
                                         itemBuilder: (context) => [
                                           PopupMenuItem(
                                             value: 1,
                                             child: Container(
-                                              child: GestureDetector(
-                                                onTap: (){
-                                                  // Routers.pushNamed(context, '/editProfile');
-                                                },
                                                 child: Row(
                                                   children: [
                                                     const Icon(
@@ -130,16 +145,11 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
                                             ),
                                           ),
                                           PopupMenuItem(
-                                            value: 1,
+                                            value: 2,
                                             child: Container(
-                                              child: GestureDetector(
-                                                onTap: (){
-                                                 editVehicle(index);
-                                                },
                                                 child: Row(
                                                   children: [
                                                     const Icon(
@@ -159,16 +169,11 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
                                             ),
                                           ),
                                           PopupMenuItem(
-                                            value: 1,
+                                            value: 3,
                                             child: Container(
-                                              child: GestureDetector(
-                                                onTap: (){
-                                                  showPopup(index);
-                                                },
                                                 child: Row(
                                                   children: [
                                                     const Icon(
@@ -188,7 +193,6 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
                                             ),
                                           ),
 
@@ -204,7 +208,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                       "VEHICLE ID:",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 17.sp,
+                                          fontSize: 16.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
 
@@ -225,7 +229,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                       "VEHICLE TYPE:",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 17.sp,
+                                          fontSize: 16.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(width: 7.w,),
@@ -246,7 +250,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                                       "VIN:",
                                       style: TextStyle(
                                           color: AppColors.dashboardtextcolor,
-                                          fontSize: 17.sp,
+                                          fontSize: 16.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(width: 24.w,),
@@ -316,12 +320,12 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
             backgroundColor: Colors.black87,
             actions: <Widget>[SizedBox(height: 3.h,),
               Center(child: Icon(Icons.warning_amber,
-                color: Colors.yellow, size: 40.sp,)),
+                color: Colors.yellow, size: 35.sp,)),
               SizedBox(height: 5.h,),
               Center(
                 child: Text(" Do you want to",
                   style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 17.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.bold
                   ),
@@ -331,7 +335,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
               Center(
                 child: Text(" delete this Vehicle?",
                   style: TextStyle(
-                      fontSize: 18.sp, color: Colors.white
+                      fontSize: 17.sp, color: Colors.white
                   ),
                 ),
               ),
@@ -362,7 +366,6 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
                   TextButton(
                     onPressed: () {
                       deleteVehicle(index);
-                      getRegVehicles();
                       Navigator.of(context).pop();
                     },
                     child:
@@ -404,6 +407,7 @@ class _AvailableVehiclesState extends State<AvailableVehicles> {
 
       if(response != null && response.statusCode == 200 && response.data["success"] == 200){
         showSuccessDialog();
+        getRegVehicles();
 
       }else{
         showErr();

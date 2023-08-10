@@ -117,13 +117,13 @@ class ImagePickerManager {
             ? [CropAspectRatioPreset.square]
             : [CropAspectRatioPreset.square],
         androidUiSettings:  const AndroidUiSettings(
-            toolbarTitle: 'Clip',
+            toolbarTitle: 'Upload File',
             toolbarColor: Colors.black38,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
-        iosUiSettings:  IOSUiSettings(
-          title: 'Clip',
+        iosUiSettings:  const IOSUiSettings(
+          title: 'Upload File',
         )
     );
 

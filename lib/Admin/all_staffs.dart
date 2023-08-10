@@ -6,6 +6,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../AuthManagers/authRepo.dart';
 import '../General/clientProfilePage.dart';
+import '../Utils/loaderFadingBlue.dart';
 
 class AllStaffs extends StatefulWidget {
   const AllStaffs({Key? key}) : super(key: key);
@@ -36,25 +37,26 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        title: const Text("Staffs",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),),
+        title: Text("Staffs",
+          style: TextStyle(color: Colors.white,
+              fontWeight: FontWeight.bold, fontSize: 17.sp),),),
 
       body: _hasInternet ?
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
         child: Container(
-            child: listOfStaffs == null ? Center(child: CircularProgressIndicator(color: Colors.green,)):
+            child: listOfStaffs == null ? Center(child: LoaderFadingBlue()):
             listOfStaffs!.isEmpty ?
             Center(
               child: Column(
                 children: [
-                  Icon(Icons.question_mark, color: Colors.grey, size: 40.sp,),
-                  const Text(
-                    "No Registered Loads Yet",
+                  Icon(Icons.question_mark, color: Colors.grey, size: 30.sp,),
+                   Text(
+                    "No Registered Staff",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 17.sp),
                   )
                 ],
               ),
@@ -62,6 +64,8 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
            ListView.builder(
             itemCount: listOfStaffs!.length,
             itemBuilder: (context, index){
+              var pic = listOfStaffs![index]["picture"];
+              var avatar = listOfStaffs![index]["avatar"];
               return GestureDetector(onTap: (){
                  Navigator.of(context).push(MaterialPageRoute(builder: (context){
                    return ClientProfilePage(staffInfo: listOfStaffs![index] );
@@ -70,7 +74,7 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
               },
 
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                  padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
                   child: Container(
                     decoration: BoxDecoration(color: Colors.indigo[500],
                         borderRadius: BorderRadius.circular(15)),
@@ -80,14 +84,18 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(child: Row(children: [
-                            const CircleAvatar(
+                            if(pic != null)
+                             CircleAvatar(
                               radius: 20,
                               backgroundColor: Colors.green,
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.white,
+                              backgroundImage: NetworkImage(pic ?? ""),
+                            ) else
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.green,
+                                backgroundImage: NetworkImage(avatar ?? ""),
                               ),
-                            ),SizedBox(width: 3.w,),
+                            SizedBox(width: 3.w,),
 
                             Column(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -95,10 +103,11 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                                    constraints: BoxConstraints(maxWidth: 250),
                                    child: Text("${listOfStaffs![index]["name"]}",
                                      overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.white, fontSize: 20,
+                                    style: TextStyle(color: Colors.white, fontSize: 16.sp,
                                         fontWeight: FontWeight.bold),
                                 ),
                                  ),
+                                SizedBox(height: 0.5.h,),
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 200),
                                   child: Text(
@@ -106,7 +115,7 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         color: Colors.grey,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -127,15 +136,16 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                                   size: 30,
                                 ),
                               ),
+                              onSelected: (val){
+                                switch(val){
+                                  case 1: showPopup(index);
+                                  break;
+                                }
+                              },
                               itemBuilder: (context) => [
                                 PopupMenuItem(
                                   value: 1,
                                   child: Container(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        Navigator.of(context).pop();
-                                        showPopup(index);
-                                      },
                                       child: Row(
                                         children: [
                                           const Icon(
@@ -155,7 +165,6 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                                           ),
                                         ],
                                       ),
-                                    ),
                                   ),
                                 ),
 
@@ -179,7 +188,7 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
     try{
       Response? response = await authRepo.getAllUsers();
 
-      if(response != null && response.statusCode == 200){
+      if(response != null && response.statusCode == 200 && response.data["status"] == "success" ){
         List staffs = response.data["data"]["docs"];
 
         List<Map<String,dynamic>> data = [];
@@ -224,12 +233,12 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
             backgroundColor: Colors.black87,
             actions: <Widget>[SizedBox(height: 3.h,),
               Center(child: Icon(Icons.warning_amber,
-                color: Colors.yellow, size: 40.sp,)),
+                color: Colors.yellow, size: 35.sp,)),
               SizedBox(height: 5.h,),
               Center(
                 child: Text(" Do you want to",
                   style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 17.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.bold
                   ),
@@ -239,7 +248,8 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
               Center(
                 child: Text(" delete this Staff ?",
                   style: TextStyle(
-                      fontSize: 18.sp, color: Colors.white
+                      fontSize: 17.sp, color: Colors.white,
+                      fontWeight: FontWeight.bold
                   ),
                 ),
               ),
@@ -270,7 +280,6 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
                   TextButton(
                     onPressed: () {
                       deleteStaff(index);
-                      getAllUsers();
                       Navigator.of(context).pop();
                     },
                     child:
@@ -311,6 +320,7 @@ class _AllStaffsState extends State<AllStaffs> with WidgetsBindingObserver {
 
       if(response != null && response.statusCode == 200 && response.data["success"] == 200){
         showSuccessDialog();
+        getAllUsers();
 
       }else{
         showErr();
