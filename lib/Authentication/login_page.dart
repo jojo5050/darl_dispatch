@@ -486,8 +486,8 @@ class _LoginPageState extends State<LoginPage> with FormValidators {
 
       var idtk = googleSignInAuthentication.idToken;
       var acctk = googleSignInAuthentication.accessToken;
-      print(":::::;;;;;;;;;;;;;;;;;;;;$idtk");
-      print(":::::;;;;;;;;..........;;;;;;;;;;;;$acctk");
+      print("print id token as $idtk");
+      print("print access token as $acctk");
       
       // Getting users credential
       UserCredential result = await auth.signInWithCredential(authCredential);

@@ -31,18 +31,7 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
 
   final GlobalKey<FormState> inputKey = GlobalKey<FormState>();
 
-  bool loading = false;
-  bool valChecked = false;
-
-  var rateCon;
-  var userId;
-  bool checkValue = false;
-
-  List<Map<String, dynamic>>? listOfTrailers;
   List<Map<String, dynamic>>? listOfVehicles;
-  List<Map<String, dynamic>>? listOfTrucks;
-
-
 
   String? formatedDate;
 
@@ -52,6 +41,18 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
   List<Map<String, dynamic>>? listOfIncomes;
 
   var incomeError;
+
+  var loadrateCon;
+
+  var loadamoutn;
+
+  var loadnetPay;
+
+  var truck;
+  var trailer;
+  var tractor;
+
+  var vehicletype;
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
     return Scaffold(
 
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 4.h),
         child: SingleChildScrollView(
           child: Form(
             key: inputKey,
@@ -266,21 +267,22 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
       if (response != null && response.statusCode == 200
           && response.data["status"] == 200) {
         stopLoader();
-        List vehicleIncome = response.data["data"];
-        List<Map<String, dynamic>> data = [];
+        vehicleIncomeModal(context);
+        var vehicleIncome = response.data["data"];
 
-        if (vehicleIncome.length > 0) {
-          for (int i = 0; i < vehicleIncome.length; i++) {
-            Map<String, dynamic> incomeList = vehicleIncome[i];
-            data.add(incomeList);
-          }
-        }
         setState(() {
-          listOfIncomes = data;
+          loadrateCon = vehicleIncome["rateConfirmationID"];
         });
-        showIncomeModal();
+        setState(() {
+          loadamoutn = vehicleIncome["rate"];
+        });
+        setState(() {
+          loadnetPay = vehicleIncome["netPay"];
+        });
+
 
       } else {
+        stopLoader();
         setState(() {
           incomeError = response?.data["message"];
         });
@@ -292,9 +294,6 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
       debugPrint("StackTrace: $str");
     }
 
-    setState(() {
-      loading = false;
-    });
   }
 
   void desplayErromssge() {
@@ -505,9 +504,11 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
     setState(() {
       vehiclePlateNumber = listOfVehicles![index]["plateNumber"];
     });
+    setState(() {
+      vehicletype = listOfVehicles![index]["vehicleType"];
+    });
 
   }
-
 
   Future<void> startLoader() async {
     return await showDialog<void>(
@@ -531,7 +532,154 @@ class _SelectVehicleIncomeState extends State<SelectVehicleIncome>
     Navigator.of(context).pop();
   }
 
-  void showIncomeModal() {
+  void vehicleIncomeModal(context) {
+    showModalBottomSheet<dynamic>(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        isScrollControlled: true,
+        context: context, builder: (BuildContext bc)
+
+    {
+      return Wrap(children:<Widget> [
+        Container(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25.0),
+                  topRight: Radius.circular(25.0))),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+            child: Column(children:  [
+              const Divider(
+                color: Colors.grey,
+                height: 5,
+                thickness: 5,
+                indent: 150,
+                endIndent: 150,
+              ),
+              SizedBox(height: 1.h,),
+              Icon(Icons.check_circle, color: Colors.green, size: 30.sp,),
+              SizedBox(height: 1.h,),
+              Align(alignment: Alignment.center,
+                child: Text(
+                  " ${startDateController.text} "" -- "" ${endDateController.text}",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    " Load RC:",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 2.w,),
+                  Text(
+                    "${loadrateCon ?? "?"}",
+                    style: TextStyle(
+                        color: AppColors.dashboardtextcolor,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Amount \$:",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 2.w,),
+                  Text(
+                    "${loadamoutn ?? "0"}",
+                    style: TextStyle(
+                      color: AppColors.dashboardtextcolor,
+                      fontSize: 17.sp, ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.h,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Net Pay \$:",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 2.w,),
+                      Text(
+                        " ${loadnetPay ?? "0"}",
+                        style: TextStyle(
+                          color: AppColors.dashboardtextcolor,
+                          fontSize: 17.sp,),
+                      ),
+                    ],
+                  ),
+
+              SizedBox(height: 1.h,),
+
+              SizedBox(height: 1.h,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Vehicle Type:",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 2.w,),
+                  Text(
+                    "${vehicletype ?? ""}",
+                    style: TextStyle(
+                      color: AppColors.dashboardtextcolor,
+                      fontSize: 17.sp,),
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.h,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Number Plate: ",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 2.w,),
+                  Text(
+                    "${vehiclePlateNumber ?? ""}",
+                    style: TextStyle(
+                      color: AppColors.dashboardtextcolor,
+                      fontSize: 17.sp, ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5.h,)
+
+            ],),
+          ),
+        ),
+
+
+      ]);
+    });
+
+  }
+
+  void showIncomeModal1() {
     showModalBottomSheet<dynamic>(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         isScrollControlled: true,

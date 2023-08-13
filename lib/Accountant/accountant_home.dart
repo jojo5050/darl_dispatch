@@ -66,7 +66,7 @@ class _AccountantHomePageState extends State<AccountantHomePage> with WidgetsBin
     getUserDetails();
     getAllStaffs();
     getDelevered();
-    getRegLoads();
+  //  getRegLoads();
     getCompanyIncome();
     super.initState();
   }
@@ -204,6 +204,70 @@ class _AccountantHomePageState extends State<AccountantHomePage> with WidgetsBin
                                         ),
                                         const Icon(
                                           Icons.group,
+                                          color: Colors.indigo,
+                                          size: 25,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  gradient: const LinearGradient(colors:
+                                  [Colors.lightBlueAccent, Colors.greenAccent],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight
+                                  ),
+
+                                  borderRadius: BorderRadius.circular(25)),
+                              width: 80.w,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 2.h,
+                                  ),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w),
+                                        child: Text(
+                                          "Completed Loads",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.sp,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w),
+                                    child:
+                                    listOfDeliveredLoads == null
+                                        ? LoaderFadingBlue()
+                                        :
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${listOfDeliveredLoads!.length ?? ""}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.sp),
+                                        ),
+                                        const Icon(
+                                          Icons.check_circle,
                                           color: Colors.indigo,
                                           size: 25,
                                         )
@@ -837,67 +901,11 @@ class _AccountantHomePageState extends State<AccountantHomePage> with WidgetsBin
         false;
   }
 
-  void getCurrentLocation() async {
-    Location location = Location();
-    LocationData? locationData;
-    bool serviceEnabled = await location.serviceEnabled();
-
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        // Location services are disabled or permission denied
-        return;
-      }
-    }
-
-    PermissionStatus permissionStatus = await location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
-      permissionStatus = await location.requestPermission();
-      if (permissionStatus != PermissionStatus.granted) {
-        // Permission denied
-        return;
-      }
-    }
-    try{
-
-      locationData = await location.getLocation();
-    }catch(e){
-      print('Error getting location: $e');
-    }
-
-    if (locationData != null) {
-      double latitude = locationData.latitude!;
-      double longitude = locationData.longitude!;
-
-      print("latitude as ...................$latitude");
-      print("longitude as ...................$longitude");
-
-      // Create the user's location document in the user_locations collection
-      createUserLocation(latitude, longitude);
-    }
-  }
-
-  void createUserLocation(double latitude, double longitude) {
-    DocumentReference userLocationRef = FirebaseFirestore.instance
-        .collection('user_locations')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    userLocationRef.set({
-      'latitude': latitude,
-      'longitude': longitude,
-      'timestamp': DateTime.now(),
-    }).then((_) {
-      print('User location created successfully');
-    }).catchError((error) {
-      print('Error creating user location: $error');
-    });
-
-  }
 
   void getDelevered() async {
     final AuthRepo authRepo = AuthRepo();
     try {
-      Response? response = await authRepo.getAllAssignedLoads();
+      Response? response = await authRepo.fetchAllRegLoads();
       if (response != null && response.statusCode == 200 &&
           response.data["status"] == "success") {
         List regLoads = response.data["data"]["docs"];
@@ -912,11 +920,12 @@ class _AccountantHomePageState extends State<AccountantHomePage> with WidgetsBin
         }
         setState(() {
           listOfDeliveredLoads = data.where((element)
-          => element["status"] == loadStatus).toList();
+          => element["totalDrops"] != 0
+              && element["totalDrops"]
+                  == element["totalLoadDropped"] ).toList();
         });
 
       } else {
-        // stopLoader();
         setState(() {
           errmsg = response!.data["message"];
         });

@@ -18,8 +18,6 @@ class AdminLoadDeliveredPreview extends StatefulWidget {
 
 class _AdminLoadDeliveredDetailsState extends State<AdminLoadDeliveredPreview> {
   List<Map<String, dynamic>>? listOfDeliveredLoads;
-  String loadStatus = "3";
-
   var errmsg;
 
 
@@ -274,7 +272,6 @@ class _AdminLoadDeliveredDetailsState extends State<AdminLoadDeliveredPreview> {
         });
 
       } else {
-        // stopLoader();
         setState(() {
           errmsg = response!.data["message"];
         });

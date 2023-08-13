@@ -20,7 +20,7 @@ class _ManageReportState extends State<ManageReport> {
       appBar: AppBar(
         title: Text("Manage Payment Reports",
             style:
-            TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp)),
+            TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.sp)),
         backgroundColor: Colors.indigo,
       ),
       backgroundColor: Colors.lightGreenAccent,
@@ -34,7 +34,7 @@ class _ManageReportState extends State<ManageReport> {
 
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
               child: Column(children: [
                 Container(
                   height: 10.h,
@@ -64,7 +64,7 @@ class _ManageReportState extends State<ManageReport> {
                                     " Vehicle Income",
                                     style: TextStyle(
                                         color: AppColors.dashboardtextcolor,
-                                        fontSize: 19.sp,
+                                        fontSize: 17.sp,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(
